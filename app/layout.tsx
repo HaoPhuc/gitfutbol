@@ -4,6 +4,11 @@ import localFont from "next/font/local";
 import Script from "next/script";
 import "./globals.css";
 import BallCursor from "@/components/BallCursor";
+import { SITE_URL } from "@/lib/site";
+
+// Umami analytics, loaded only when this deployment has its own instance set up.
+const UMAMI_SRC = process.env.NEXT_PUBLIC_UMAMI_SRC;
+const UMAMI_WEBSITE_ID = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
 
 // Display — ultra-condensed all-caps for the WC26 "tournament" impact.
 const display = Bebas_Neue({
@@ -36,7 +41,7 @@ const DESCRIPTION =
   "Rate any GitHub profile out of 99 as a FIFA-Ultimate-Team-style player card, scored from real commits, stars and contributions. Get scouted and share your card.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://gitfut.com"),
+  metadataBase: new URL(SITE_URL),
   title: TITLE,
   description: DESCRIPTION,
   keywords: [
@@ -53,7 +58,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,
-    url: "https://gitfut.com",
+    url: SITE_URL,
     siteName: "GitFut",
     type: "website",
   },
@@ -77,11 +82,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <BallCursor />
         {children}
-        <Script
-          defer
-          src="https://umami.gitfut.com/script.js"
-          data-website-id="027b8f90-8ef1-4033-884a-864d6c9036e4"
-        />
+        {UMAMI_SRC && UMAMI_WEBSITE_ID && <Script defer src={UMAMI_SRC} data-website-id={UMAMI_WEBSITE_ID} />}
       </body>
     </html>
   );

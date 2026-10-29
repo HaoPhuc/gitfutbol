@@ -1,12 +1,11 @@
 import type { Card } from "@/lib/scoring/types";
+import { SITE_URL as SITE } from "@/lib/site";
 
 // Share service — a pure module that, given a card, produces the share text and
 // per-platform intent URLs. No DOM, no side effects; the React layer wires the
 // gestures (native share sheet, window.open). Tested in isolation.
 
 export type SharePlatform = "x" | "linkedin" | "whatsapp";
-
-const SITE = "https://gitfut.com";
 
 // Deterministic line per login (FNV-1a) so a given user always gets the same
 // brag — leads with the flex, leaves room for the user's own comment.

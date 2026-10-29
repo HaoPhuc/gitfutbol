@@ -11,6 +11,7 @@ import { resolveResultTheme } from "@/components/finishTheme";
 import { VS_PALETTE } from "@/components/VsBurst";
 import { S_PATH, V_PATH, particlesAlong, sliverBetween } from "@/lib/vsBurst";
 import type { Card } from "@/lib/scoring/types";
+import { SITE_HOST } from "@/lib/site";
 
 // The Fixture unfurl — the file-convention OG image for /<a>/vs/<b>. Next wires
 // it into the page's og:image + twitter:image automatically, so page.tsx only
@@ -142,7 +143,7 @@ export default async function Image({
               marginTop: 10,
             }}
           >
-            gitfut.com
+            {SITE_HOST}
           </div>
         </div>
       ),

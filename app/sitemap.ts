@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import { SAMPLE_LOGINS } from "@/lib/github/samples";
-
-const BASE = "https://gitfut.com";
+import { SITE_URL as BASE } from "@/lib/site";
 
 // Home + the showcase profiles (real, indexable example cards). Per-user pages
 // are generated on demand, so they aren't enumerated here.

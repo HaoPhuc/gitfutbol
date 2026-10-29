@@ -5,6 +5,7 @@ import type { Card, StatKey } from "@/lib/scoring/types";
 import { resolveCardTheme } from "@/components/finishTheme";
 import { languageLogoUrl } from "@/lib/github/languages";
 import { cardDisplayName } from "@/lib/text";
+import { SITE_HOST } from "@/lib/site";
 import { loadCardFonts } from "./card";
 
 // Server-side re-creation of the in-app PlayerCard (components/PlayerCard.tsx),
@@ -199,7 +200,7 @@ export function cardTree(card: Card, assets: CardAssets, w: number) {
 
       {/* signature — branding baked into every shared/embedded card */}
       <div style={{ ...at(8, 94.6), display: "flex", fontSize: cqw(4.1), fontWeight: 700, letterSpacing: cqw(0.4), color: ink, opacity: 0.62 }}>
-        GITFUT.COM
+        {SITE_HOST.toUpperCase()}
       </div>
       <div style={{ position: "absolute", right: "8%", top: "94.6%", display: "flex", fontSize: cqw(4.1), fontWeight: 700, letterSpacing: cqw(0.4), color: ink, opacity: 0.62 }}>
         @{card.login}
@@ -208,7 +209,7 @@ export function cardTree(card: Card, assets: CardAssets, w: number) {
   );
 }
 
-// The standalone embeddable card image: gitfut.com/<user>.png.
+// The standalone embeddable card image: <site>/<user>.png.
 export async function renderCardImage(card: Card): Promise<ImageResponse> {
   const assets = await loadCardAssets(card, EMBED_W);
   return new ImageResponse(cardTree(card, assets, EMBED_W), {

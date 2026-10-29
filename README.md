@@ -10,9 +10,9 @@
 
 <br/><br/>
 
-<a href="https://gitfut.com/torvalds"><img src="https://gitfut.com/torvalds.png" width="240" alt="GitFut card"></a>
-<a href="https://gitfut.com/ThePrimeagen"><img src="https://gitfut.com/ThePrimeagen.png" width="240" alt="GitFut card"></a>
-<a href="https://gitfut.com/t3dotgg"><img src="https://gitfut.com/t3dotgg.png" width="240" alt="GitFut card"></a>
+<a href="https://gitfutbol.com/torvalds"><img src="https://gitfutbol.com/torvalds.png" width="240" alt="GitFut card"></a>
+<a href="https://gitfutbol.com/ThePrimeagen"><img src="https://gitfutbol.com/ThePrimeagen.png" width="240" alt="GitFut card"></a>
+<a href="https://gitfutbol.com/t3dotgg"><img src="https://gitfutbol.com/t3dotgg.png" width="240" alt="GitFut card"></a>
 
 <br/><br/>
 
@@ -25,13 +25,13 @@
 Your card lives at a URL. Drop it in your profile README, your portfolio, anywhere — and it **re-scouts itself** as your stats change.
 
 ```md
-[![My GitFut card](https://gitfut.com/YOUR_USERNAME.png)](https://gitfut.com/YOUR_USERNAME)
+[![My GitFut card](https://gitfutbol.com/YOUR_USERNAME.png)](https://gitfutbol.com/YOUR_USERNAME)
 ```
 
 | | |
 |---|---|
-| **`gitfut.com/<username>.png`** | your card, as a live image |
-| **`gitfut.com/<username>`** | the full scout report |
+| **`gitfutbol.com/<username>.png`** | your card, as a live image |
+| **`gitfutbol.com/<username>`** | the full scout report |
 | **`?country=XX`** | override the flag (e.g. `?country=DZ`) |
 
 <br/>
@@ -131,7 +131,7 @@ The whole cabinet is computed server-side at scout time and cached with the card
 
 **Built with** Next.js · TypeScript · Tailwind · Redis
 
-**[gitfut.com](https://gitfut.com)** &nbsp;·&nbsp; scout someone today
+**[gitfutbol.com](https://gitfutbol.com)** &nbsp;·&nbsp; scout someone today
 
 <img src="https://capsule-render.vercel.app/api?type=waving&height=90&color=0:39d353,100:006d32&section=footer" alt="" width="100%">
 

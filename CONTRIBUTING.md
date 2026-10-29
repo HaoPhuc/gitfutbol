@@ -28,6 +28,14 @@ GITHUB_TOKEN=github_pat_xxx
 # Optional: scout counter + card cache. The app is fully functional without it,
 # and won't touch a remote Redis you can't reach — just leave it unset.
 REDIS_URL=redis://localhost:6379
+
+# Optional: the public address used in share links, metadata and the domain
+# printed on cards. Defaults to https://gitfutbol.com. Read at build time.
+NEXT_PUBLIC_SITE_URL=https://gitfutbol.com
+
+# Optional: Umami analytics. The script only loads when both are set.
+NEXT_PUBLIC_UMAMI_SRC=https://your-umami-host/script.js
+NEXT_PUBLIC_UMAMI_WEBSITE_ID=your-website-id
 ```
 
 ## Before you open a PR

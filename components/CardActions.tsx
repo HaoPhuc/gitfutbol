@@ -186,7 +186,7 @@ export default function CardActions({
       const node = targetRef.current;
       if (!node) return;
       // renderCardImage awaits fonts and captures an off-screen clone that
-      // carries the gitfut.com signature (hidden on the live card).
+      // carries the site signature (hidden on the live card).
       const url = await renderCardImage(node, (n) => toPng(n, RENDER_OPTS));
       const a = document.createElement("a");
       a.download = `${card.login}-gitfut.png`;

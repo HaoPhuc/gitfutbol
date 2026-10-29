@@ -1,4 +1,4 @@
-// Card-image capture. The card's signature (gitfut.com + @handle) is hidden on
+// Card-image capture. The card's signature (site domain + @handle) is hidden on
 // the live card and only painted into exported images. To keep the watermark out
 // of the on-screen card WITHOUT flashing it during the (slow, ~1s) html-to-image
 // render, we never touch the live node: we render a clone tagged

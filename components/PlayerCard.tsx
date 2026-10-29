@@ -4,6 +4,7 @@ import { memo, type CSSProperties } from "react";
 import type { Card, StatKey } from "@/lib/scoring/types";
 import { languageLogoUrl } from "@/lib/github/languages";
 import { cardDisplayName } from "@/lib/text";
+import { SITE_HOST } from "@/lib/site";
 import { resolveCardTheme } from "./finishTheme";
 
 // Faithful port of the Python FUT generator's 540×820 layout. Positions are
@@ -323,7 +324,7 @@ function PlayerCard({ card }: { card: Card }) {
             opacity: 0.62,
           }}
         >
-          GITFUT.COM
+          {SITE_HOST.toUpperCase()}
         </div>
         <div
           style={{

@@ -1,4 +1,4 @@
-// Canonical scout route: gitfut.com/<username>. The implementation lives in
+// Canonical scout route: <site>/<username>. The implementation lives in
 // /u/<username> (kept working for older shared links); this reuses it from one
 // source of truth. Route-segment config (`dynamic`) must be declared here —
 // Next forbids re-exporting it — while the handlers can be re-exported.
