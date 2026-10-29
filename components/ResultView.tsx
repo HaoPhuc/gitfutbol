@@ -9,6 +9,7 @@ import TiltCard from "./TiltCard";
 import StoryFrame from "./StoryFrame";
 import CardActions from "./CardActions";
 import DuelButton from "./DuelButton";
+import RescoutLine from "./RescoutLine";
 import FlagPicker from "./FlagPicker";
 import Mascot from "./Mascot";
 import FooterCredit from "./FooterCredit";
@@ -36,6 +37,8 @@ interface Props {
   stars?: number | null;
   /** GitHub-derived flag; share links only carry ?country= when it's overridden. */
   canonicalCountry?: string;
+  /** Takes the card a re-scout rebuilt; without it the "Scouted … ago" line is hidden. */
+  onRescouted?: (card: Card) => void;
   /** Rendered as the feature tour's demo stage: drop the support pills, which
    *  are promo chrome with nothing to do with the tour (and float above it),
    *  and hold the header still so the camera's scaling doesn't fight it. */
@@ -52,6 +55,7 @@ export default function ResultView({
   onCountryChange,
   stars,
   canonicalCountry = "",
+  onRescouted,
   demo = false,
 }: Props) {
   const captureRef = useRef<HTMLDivElement>(null);
@@ -227,6 +231,7 @@ export default function ResultView({
         <div className="flex max-[980px]:order-3 max-[980px]:w-full max-[980px]:max-w-[420px] max-[980px]:justify-center">
           <div className="flex w-full max-w-[360px] flex-col gap-[14px]">
             <MetricsPanel card={card} />
+            {onRescouted && <RescoutLine card={card} onRescouted={onRescouted} />}
             {hasAwards ? (
               <>
                 <div className="max-[980px]:hidden" data-tour="trophies">

@@ -2,11 +2,12 @@ import "server-only";
 import { cache } from "react";
 import { redis } from "./redis";
 import { buildCard } from "./scoring/engine";
-import { fetchProfile, fetchWindows, type GithubError } from "./github/client";
+import { fetchProfile, fetchWindows, type GithubError, type GithubErrorType } from "./github/client";
 import { signalsFromPayload } from "./github/signals";
 import { SAMPLE_CARDS } from "./github/samples";
 import { computeAwards, wcBallCandidate, WC_EDITIONS, type WcWindowTotals } from "./awards";
 import type { Card } from "./scoring/types";
+import { RESCOUT_COOLDOWN_SECONDS } from "./rescout";
 
 // Read-through Redis cache for built cards — the single path every scout surface
 // (the /<user> page, the JSON API, the OG image) uses to turn a username into a
@@ -24,7 +25,7 @@ import type { Card } from "./scoring/types";
 // Namespaced alongside gitfut:scouts:total. The version segment lets a deploy
 // that changes buildCard's output shape or scoring invalidate every entry at
 // once (bump it) instead of serving stale-shaped cards until their TTL lapses.
-const CACHE_VERSION = "v4"; // v4: cards carry the season history + potential/value outlook
+const CACHE_VERSION = "v5"; // v5: cards carry builtAt for the re-scout line
 const CARD_TTL_SECONDS = 120 * 60; // 2h — GitHub stats move slowly; longer TTL = fewer refetches of hot profiles under load.
 
 const normalizeLogin = (username: string) => username.trim().replace(/^@/, "").toLowerCase();
@@ -65,6 +66,7 @@ const inflight = new Map<string, Promise<Card>>();
 async function buildFresh(username: string, login: string): Promise<Card> {
   const card = buildCard(signalsFromPayload(await fetchProfile(username)));
   card.awards = computeAwards(card, await wcWindowsFor(card, username));
+  card.builtAt = new Date().toISOString();
   await writeCache(login, card);
   return card;
 }
@@ -106,13 +108,51 @@ export async function scoutCard(username: string): Promise<Card> {
   const cached = await readCache(login);
   if (cached) return cached;
 
-  // Coalesce concurrent misses for this login onto one build (see `inflight`).
+  return build(username, login);
+}
+
+// Coalesce concurrent builds for this login onto one (see `inflight`).
+function build(username: string, login: string): Promise<Card> {
   const existing = inflight.get(login);
   if (existing) return existing;
-
   const pending = buildFresh(username, login).finally(() => inflight.delete(login));
   inflight.set(login, pending);
   return pending;
+}
+
+// Re-scout: rebuild a card now (and overwrite the cached one) instead of waiting
+// out CARD_TTL_SECONDS, e.g. right after a GitHub profile change. Every rebuild
+// spends GitHub calls from the token pool, so a per-login lock allows one per
+// RESCOUT_COOLDOWN_SECONDS; a held lock (or an unreachable Redis) answers with
+// the seconds left instead. Without Redis nothing is cached, so the rebuild just
+// runs: it costs no more than reloading the page.
+const lockKeyFor = (login: string) => `gitfut:refresh-lock:${login}`;
+
+export async function rescoutCard(username: string): Promise<{ card: Card } | { retryAfter: number }> {
+  const login = normalizeLogin(username);
+  // Tokenless demo: there's nothing to refetch, the sample is the card.
+  if (!process.env.GITHUB_TOKEN && !process.env.GITHUB_TOKENS) return { card: await scoutCard(username) };
+  if (redis) {
+    try {
+      const key = lockKeyFor(login);
+      if ((await redis.set(key, "1", "EX", RESCOUT_COOLDOWN_SECONDS, "NX")) !== "OK") {
+        return { retryAfter: Math.max(1, await redis.ttl(key)) };
+      }
+    } catch (e) {
+      console.error("[scout] refresh lock failed:", (e as Error).message);
+      return { retryAfter: 60 };
+    }
+  }
+  return { card: await build(username, login) };
+}
+
+// HTTP status for a failed scout, shared by the JSON routes.
+export function scoutErrorStatus(type: GithubErrorType): number {
+  if (type === "notfound") return 404;
+  if (type === "invalid") return 400;
+  if (type === "ratelimit") return 429;
+  if (type === "config") return 500;
+  return 502;
 }
 
 // Request-memoised card load that returns the scout error instead of throwing,
