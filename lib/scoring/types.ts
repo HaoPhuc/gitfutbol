@@ -172,5 +172,8 @@ export interface Card {
   // potential/value outlook. Optional for the same serialization reason.
   seasons?: SeasonRating[];
   outlook?: Outlook;
+  // ISO time the card was built from GitHub (lib/scout), behind the "Scouted …
+  // ago · Re-scout" line. Unset on the baked sample cards.
+  builtAt?: string;
   report: Report;
 }

@@ -11,17 +11,22 @@ vi.mock("@/lib/github/signals", () => ({ signalsFromPayload: (p: unknown) => p }
 vi.mock("@/lib/scoring/engine", () => ({ buildCard: (s: unknown) => s }));
 
 // In-memory Redis stand-in so read-through caching is exercised without a server.
+// SET honours NX (the re-scout lock); TTL reports a fixed 600s on held keys.
 const store = new Map<string, string>();
 vi.mock("@/lib/redis", () => ({
   redis: {
     get: async (k: string) => store.get(k) ?? null,
-    set: async (k: string, v: string) => {
+    set: async (k: string, v: string, ...opts: unknown[]) => {
+      if (opts.includes("NX") && store.has(k)) return null;
       store.set(k, v);
+      return "OK";
     },
+    ttl: async (k: string) => (store.has(k) ? 600 : -2),
   },
 }));
 
-import { scoutCard } from "@/lib/scout";
+import { rescoutCard, scoutCard } from "@/lib/scout";
+import type { Card } from "@/lib/scoring/types";
 
 // A promise whose settlement we control, to freeze a fetch mid-flight.
 function deferred<T>() {
@@ -99,5 +104,54 @@ describe("scoutCard single-flight", () => {
     fetchProfile.mockResolvedValueOnce(payload("torvalds"));
     await scoutCard("torvalds");
     expect(fetchProfile).toHaveBeenCalledTimes(2);
+  });
+
+  it("stamps each fresh build with builtAt", async () => {
+    fetchProfile.mockResolvedValueOnce(payload("torvalds"));
+    const card = await scoutCard("torvalds");
+    expect(Date.parse(card.builtAt ?? "")).not.toBeNaN();
+  });
+});
+
+describe("rescoutCard", () => {
+  const rebuilt = (login: string, name: string) => ({ login, name });
+
+  it("rebuilds past the cache and overwrites it", async () => {
+    fetchProfile.mockResolvedValueOnce(rebuilt("torvalds", "old"));
+    await scoutCard("torvalds"); // cached
+
+    fetchProfile.mockResolvedValueOnce(rebuilt("torvalds", "new"));
+    const res = await rescoutCard("Torvalds");
+    expect(res).toMatchObject({ card: { name: "new" } });
+    expect(fetchProfile).toHaveBeenCalledTimes(2);
+
+    // The next plain scout serves the rebuilt card from the cache.
+    await expect(scoutCard("torvalds")).resolves.toMatchObject({ name: "new" });
+    expect(fetchProfile).toHaveBeenCalledTimes(2);
+  });
+
+  it("allows one re-scout per profile per cooldown", async () => {
+    fetchProfile.mockImplementation(async (u: string) => payload(u));
+    expect(await rescoutCard("torvalds")).toHaveProperty("card");
+    expect(await rescoutCard("TORVALDS")).toEqual({ retryAfter: 600 });
+    expect(fetchProfile).toHaveBeenCalledTimes(1);
+
+    // The lock is per login.
+    expect(await rescoutCard("alice")).toHaveProperty("card");
+    expect(fetchProfile).toHaveBeenCalledTimes(2);
+  });
+
+  it("keeps the lock after a failed rebuild, so retries can't hammer GitHub", async () => {
+    fetchProfile.mockRejectedValueOnce({ type: "ratelimit", message: "limited" });
+    await expect(rescoutCard("torvalds")).rejects.toMatchObject({ type: "ratelimit" });
+    expect(await rescoutCard("torvalds")).toEqual({ retryAfter: 600 });
+    expect(fetchProfile).toHaveBeenCalledTimes(1);
+  });
+
+  it("returns the sample untouched in the tokenless demo", async () => {
+    vi.stubEnv("GITHUB_TOKEN", "");
+    const res = (await rescoutCard("torvalds")) as { card: Card };
+    expect(res.card.login).toBe("torvalds");
+    expect(fetchProfile).not.toHaveBeenCalled();
   });
 });

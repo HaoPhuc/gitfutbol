@@ -1,5 +1,5 @@
 import { type GithubError } from "@/lib/github/client";
-import { scoutCard } from "@/lib/scout";
+import { scoutCard, scoutErrorStatus } from "@/lib/scout";
 import { pickFlag } from "@/lib/flagPriority";
 import { recordScout } from "@/lib/analytics";
 import { after } from "next/server";
@@ -22,16 +22,9 @@ export async function GET(req: Request, { params }: { params: Promise<{ username
     return Response.json(resolveCountry(card, override));
   } catch (e) {
     const err = e as GithubError;
-    const status =
-      err.type === "notfound"
-        ? 404
-        : err.type === "invalid"
-          ? 400
-          : err.type === "ratelimit"
-            ? 429
-            : err.type === "config"
-              ? 500
-              : 502;
-    return Response.json({ error: err.message ?? "Failed to scout that profile." }, { status });
+    return Response.json(
+      { error: err.message ?? "Failed to scout that profile." },
+      { status: scoutErrorStatus(err.type) },
+    );
   }
 }

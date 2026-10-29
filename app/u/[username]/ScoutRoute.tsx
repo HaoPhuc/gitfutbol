@@ -10,11 +10,12 @@ import type { Card } from "@/lib/scoring/types";
 // so navigation and the report-page flag edit are wired here. Editing the flag
 // updates the card in view, reflects the choice in the URL (?country=, removed
 // when cleared) so a re-share / reload keeps it, and writes the localStorage
-// cache so the home flow sees the same choice within the TTL.
+// cache so the home flow sees the same choice within the TTL. A re-scout swaps in
+// the rebuilt card the same way.
 export default function ScoutRoute({
   card: initial,
   stars,
-  canonicalCountry,
+  canonicalCountry: initialCanonical,
 }: {
   card: Card;
   stars: number | null;
@@ -22,6 +23,16 @@ export default function ScoutRoute({
 }) {
   const router = useRouter();
   const [card, setCard] = useState(initial);
+  const [canonicalCountry, setCanonicalCountry] = useState(initialCanonical);
+
+  // The rebuilt card carries the GitHub-derived flag: keep a manual pick, else
+  // follow GitHub (the location may be what just changed).
+  const onRescouted = (fresh: Card) => {
+    const next = { ...fresh, country: card.country !== canonicalCountry ? card.country : fresh.country };
+    setCanonicalCountry(fresh.country);
+    setCard(next);
+    writeCardCache(next);
+  };
 
   const onCountryChange = (code: string) => {
     const next = { ...card, country: code };
@@ -41,6 +52,7 @@ export default function ScoutRoute({
       onCountryChange={onCountryChange}
       stars={stars}
       canonicalCountry={canonicalCountry}
+      onRescouted={onRescouted}
     />
   );
 }
