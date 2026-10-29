@@ -9,6 +9,7 @@ const fetchProfile = vi.fn();
 vi.mock("@/lib/github/client", () => ({ fetchProfile: (u: string) => fetchProfile(u) }));
 vi.mock("@/lib/github/signals", () => ({ signalsFromPayload: (p: unknown) => p }));
 vi.mock("@/lib/scoring/engine", () => ({ buildCard: (s: unknown) => s }));
+vi.mock("@/lib/registry", () => ({ recordCard: async () => {} })); // covered by registry.test.ts
 
 // In-memory Redis stand-in so read-through caching is exercised without a server.
 // SET honours NX (the re-scout lock); TTL reports a fixed 600s on held keys.
