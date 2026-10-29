@@ -24,7 +24,7 @@ const card = (over: Partial<Card> = {}): Card =>
     club: "legends",
     stats: { pac: 74, sho: 97, pas: 90, dri: 69, def: 65, phy: 96 },
     position: "ST",
-    family: "Forward",
+    family: "Striker",
     baseOVR: 88,
     overall: 95,
     finish: "icon",

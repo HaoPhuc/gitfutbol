@@ -187,11 +187,10 @@ describe("Golden Boot", () => {
     card({ position, overall, stats: { pac: 70, sho, pas: 70, dri: 70, def: 70, phy: 70 } });
 
   it("scoring posts only", () => {
-    expect(keys(boot("ST", 85))).toContain("golden_boot");
-    expect(keys(boot("RW", 85))).toContain("golden_boot");
-    expect(keys(boot("CAM", 85))).toContain("golden_boot");
-    expect(keys(boot("CB", 99))).not.toContain("golden_boot");
-    expect(keys(boot("CDM", 99))).not.toContain("golden_boot");
+    for (const pos of ["ST", "CF", "RW", "LW", "SS", "CAM"] as const)
+      expect(keys(boot(pos, 85))).toContain("golden_boot");
+    for (const pos of ["CM", "CB", "CDM", "RWB", "RFB"] as const)
+      expect(keys(boot(pos, 99))).not.toContain("golden_boot");
   });
 
   it("needs elite shooting and the profile floor", () => {

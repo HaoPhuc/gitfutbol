@@ -235,7 +235,7 @@ function wcGoldenBalls(card: Card, windows: WcWindowTotals[], now: Date): AwardI
 // ---- Golden Boot -----------------------------------------------------------
 // Held on current form: a scoring post + elite shooting. No year attached.
 
-const BOOT_POSITIONS = new Set(["ST", "RW", "CAM"]);
+const BOOT_POSITIONS = new Set(["ST", "CF", "RW", "LW", "SS", "CAM"]);
 const BOOT_SHO_FLOOR = 80;
 
 function goldenBoot(card: Card): AwardInstance[] {
