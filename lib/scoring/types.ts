@@ -115,6 +115,26 @@ export interface FounderMeta {
   tagline: string; // tooltip + flavor, e.g. "Co-founder of gitfut"
 }
 
+// One point on the progression chart: a completed calendar year rebuilt from the
+// yearly GitHub history (lib/scoring/progression), or the live card (current).
+export interface SeasonRating {
+  year: number;
+  current: boolean;
+  overall: number;
+  position: Position;
+  finish: Finish;
+  stats: Stats;
+}
+
+// Potential and estimated market value (lib/scoring/progression).
+export interface Outlook {
+  age: number; // "player age": K.outlook.startAge + years on GitHub
+  potential: number; // projected peak overall, >= overall
+  drive: number; // 0–1: how much of the growth room the coding habit keeps
+  value: number; // estimated market value, in euros
+  valueParts: { base: number; potential: number; age: number }; // base € × the two multipliers
+}
+
 export interface Card {
   login: string;
   name: string;
@@ -148,5 +168,9 @@ export interface Card {
   // The trophy cabinet, computed at scout time (lib/awards via lib/scout).
   // Optional for the same serialization reason.
   awards?: AwardInstance[];
+  // Season-by-season ratings (oldest first, ending with the live card) and the
+  // potential/value outlook. Optional for the same serialization reason.
+  seasons?: SeasonRating[];
+  outlook?: Outlook;
   report: Report;
 }

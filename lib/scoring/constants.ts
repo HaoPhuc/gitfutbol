@@ -41,6 +41,29 @@ export const K = {
   ovrCap: 88,
   finish: { iconMin: 90, totyMin: 85, totyLegacy: 0.5, goldMin: 75, silverMin: 65 },
   iconAllowlist: ["torvalds"],
+  outlook: {
+    // Player age = startAge + years on GitHub; growth room shrinks by
+    // roomPerYear until peakAge, capped at maxRoom.
+    startAge: 17,
+    peakAge: 29,
+    roomPerYear: 1.5,
+    maxRoom: 15,
+    // Coding on dailyDays of the last year keeps all of the room; never coding
+    // keeps baseDrive of it.
+    dailyDays: 250,
+    baseDrive: 0.25,
+    // Value: an S-curve on overall that levels off at valueMax (≈ €230K at 60,
+    // €2.7M at 70, €30M at 80, €155M at 90), × e^perPotential per point of
+    // headroom; past declineFrom it loses declinePerYear a year, down to
+    // valueFloor of itself.
+    valueMax: 250_000_000,
+    valueMid: 88,
+    valueSteep: 0.25,
+    perPotential: 0.1,
+    declineFrom: 30,
+    declinePerYear: 0.06,
+    valueFloor: 0.4,
+  },
 };
 
 // The archetype tree. An archetype fits when every HIGH stat stands out above the
