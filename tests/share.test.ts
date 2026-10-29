@@ -24,7 +24,7 @@ const card = (over: Partial<Card> = {}): Card =>
     club: "legends",
     stats: { pac: 74, sho: 97, pas: 90, dri: 69, def: 65, phy: 96 },
     position: "ST",
-    family: "Forward",
+    family: "Striker",
     baseOVR: 88,
     overall: 95,
     finish: "icon",
@@ -46,11 +46,11 @@ const card = (over: Partial<Card> = {}): Card =>
 
 describe("share service", () => {
   it("builds the canonical card URL from the login, encoding the displayed flag", () => {
-    expect(cardUrl(card())).toBe("https://gitfut.com/torvalds?country=us");
+    expect(cardUrl(card())).toBe("https://gitfutbol.com/torvalds?country=us");
   });
 
   it("omits the country param when the card has no flag", () => {
-    expect(cardUrl(card({ country: "" }))).toBe("https://gitfut.com/torvalds");
+    expect(cardUrl(card({ country: "" }))).toBe("https://gitfutbol.com/torvalds");
   });
 
   it("X intent uses /intent/tweet (NOT /intent/post) and carries url + hashtag", () => {
@@ -58,19 +58,19 @@ describe("share service", () => {
     expect(u).toContain("https://twitter.com/intent/tweet?");
     expect(u).not.toContain("/intent/post");
     expect(u).toContain("hashtags=GitFut");
-    expect(u).toContain(encodeURIComponent("https://gitfut.com/torvalds?country=us"));
+    expect(u).toContain(encodeURIComponent("https://gitfutbol.com/torvalds?country=us"));
   });
 
   it("LinkedIn intent uses share-offsite with only the url (preview from OG)", () => {
     const u = intentUrl("linkedin", card());
     expect(u).toContain("linkedin.com/sharing/share-offsite/?url=");
-    expect(u).toContain(encodeURIComponent("https://gitfut.com/torvalds?country=us"));
+    expect(u).toContain(encodeURIComponent("https://gitfutbol.com/torvalds?country=us"));
   });
 
   it("WhatsApp intent puts text + url in the message", () => {
     const u = intentUrl("whatsapp", card());
     expect(u).toContain("api.whatsapp.com/send?text=");
-    expect(decodeURIComponent(u)).toContain("gitfut.com/torvalds?country=us");
+    expect(decodeURIComponent(u)).toContain("gitfutbol.com/torvalds?country=us");
   });
 
   it("share text is deterministic per login and mentions the rating", () => {
@@ -91,7 +91,7 @@ describe("share service", () => {
   it("native payload carries title, brag-led text, and url", () => {
     const p = nativeSharePayload(card());
     expect(p.title).toBe("GitFut");
-    expect(p.url).toBe("https://gitfut.com/torvalds?country=us");
+    expect(p.url).toBe("https://gitfutbol.com/torvalds?country=us");
     expect(p.text).toBe(shareMessage(card()));
     expect(p.text).toContain("get scouted");
   });
@@ -103,7 +103,7 @@ describe("share service", () => {
 
 describe("duel share service", () => {
   it("builds the canonical duel URL from both corners", () => {
-    expect(duelUrl("younesfdj", "torvalds")).toBe("https://gitfut.com/younesfdj/vs/torvalds");
+    expect(duelUrl("younesfdj", "torvalds")).toBe("https://gitfutbol.com/younesfdj/vs/torvalds");
   });
 
   it("message is deterministic per matchup, @-mentions the opponent, and never spoils the score", () => {
@@ -129,13 +129,13 @@ describe("duel share service", () => {
     expect(u).toContain("https://twitter.com/intent/tweet?");
     expect(u).not.toContain("/intent/post");
     expect(u).toContain("hashtags=GitFut");
-    expect(u).toContain(encodeURIComponent("https://gitfut.com/younesfdj/vs/torvalds"));
+    expect(u).toContain(encodeURIComponent("https://gitfutbol.com/younesfdj/vs/torvalds"));
   });
 
   it("native payload carries the title, the message, and the duel url", () => {
     const p = duelSharePayload("younesfdj", "torvalds");
     expect(p.title).toBe("GitFut Duel");
-    expect(p.url).toBe("https://gitfut.com/younesfdj/vs/torvalds");
+    expect(p.url).toBe("https://gitfutbol.com/younesfdj/vs/torvalds");
     expect(p.text).toBe(duelShareMessage("younesfdj", "torvalds"));
   });
 });

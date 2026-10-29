@@ -2,6 +2,7 @@ import Background from "@/components/Background";
 import AppShell from "@/components/AppShell";
 import { getRepoStars } from "@/lib/github/stars";
 import { getScoutCount } from "@/lib/analytics";
+import { SITE_URL } from "@/lib/site";
 
 // Dynamic so the live scout count is fresh per load (the stars fetch keeps its
 // own 1h cache regardless).
@@ -12,15 +13,15 @@ const JSON_LD = {
   "@graph": [
     {
       "@type": "WebSite",
-      "@id": "https://gitfut.com/#website",
-      url: "https://gitfut.com",
+      "@id": `${SITE_URL}/#website`,
+      url: SITE_URL,
       name: "GitFut",
       description: "Turn any GitHub profile into a player card rated out of 99.",
     },
     {
       "@type": "WebApplication",
       name: "GitFut",
-      url: "https://gitfut.com",
+      url: SITE_URL,
       applicationCategory: "DeveloperApplication",
       operatingSystem: "Web",
       browserRequirements: "Requires JavaScript",

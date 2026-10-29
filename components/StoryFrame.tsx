@@ -2,6 +2,7 @@
 
 import { forwardRef, type CSSProperties } from "react";
 import type { Card } from "@/lib/scoring/types";
+import { SITE_HOST } from "@/lib/site";
 import PlayerCard from "./PlayerCard";
 import { resolveCardTheme, resolveResultTheme } from "./finishTheme";
 
@@ -228,7 +229,7 @@ const StoryFrame = forwardRef<HTMLDivElement, { card: Card }>(function StoryFram
             whiteSpace: "nowrap",
           }}
         >
-          TRY YOUR CARD ON GITFUT.COM
+          TRY YOUR CARD ON {SITE_HOST.toUpperCase()}
           <span style={{ fontSize: 48 }}>→</span>
         </div>
       </div>

@@ -16,7 +16,7 @@ const yr = (
 // Home-fan showcase: four REAL GitHub accounts, so every card resolves to a live
 // scout when clicked (no 404s). Signals were captured once and baked here to keep
 // the home page fast (no per-load GitHub fetch). Tiers: torvalds / ThePrimeagen /
-// Theo Browne = icon, PewDiePie (pewdiepie-archdaemon) = gold.
+// Theo Browne = icon, PewDiePie (pewdiepie-archdaemon) = silver.
 // Avatars must use the avatars.githubusercontent.com form — the
 // github.com/<login>.png redirect fails the <img crossOrigin> check.
 

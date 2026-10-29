@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["sharp"],
 
   async rewrites() {
-    // Pretty embed URL: gitfut.com/<username>.png -> the card image route. The
+    // Pretty embed URL: <site>/<username>.png -> the card image route. The
     // username charset matches GitHub's (alphanumerics + hyphens), and it only
     // matches the .png suffix, so this never shadows real static assets in
     // /public. Returned as an afterFiles rewrite (a plain array), so /public

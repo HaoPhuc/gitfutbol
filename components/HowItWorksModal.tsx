@@ -17,14 +17,14 @@ const READS = [
 // rather than a score. These are independent truths, not steps, so no 01/02/03.
 const LAWS = [
   {
-    kicker: "MEASURED AGAINST YOU",
-    lead: "Your own curve, not the world's.",
-    body: "Each stat is weighed against the rest of your profile, so a high one marks where you stand out and a low one where you don't. That's why your weakest area can read lower than the raw number suggests — the card grades you on you.",
+    kicker: "RATED AGAINST THE FIELD",
+    lead: "60 is a regular. 99 is world-class.",
+    body: "Each stat comes straight from your GitHub numbers, rated between what a typical active developer has and what the very best have. Nothing is curved against the rest of your card, so what you see is what you earned.",
   },
   {
-    kicker: "EVERY CARD HAS A SHAPE",
-    lead: "Nobody's elite at everything.",
-    body: "Your strongest signals get pushed up and your weakest pulled down, so the card leans instead of sitting flat. That lean is what decides your position and archetype — read off your stats, never picked.",
+    kicker: "YOUR STANDOUTS PICK YOUR ROLE",
+    lead: "Read off your stats, never picked.",
+    body: "Stats that clearly stand out from the rest of your card make you a playmaker, striker, anchor or fullback, and one more stat settles the exact position. If nothing stands out, you're an all-rounder.",
   },
   {
     kicker: "THE 90s ARE EARNED",

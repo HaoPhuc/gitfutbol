@@ -1,128 +1,90 @@
 import { countryForLogin } from "../geo";
 import { topLanguageLogo } from "../github/languages";
 import { deriveMetrics, deriveSkillMoves, deriveStyle, deriveWeakFoot, deriveWorkRate } from "./attributes";
-import { ATTACK_STATS, FINISH_LABELS, FOUNDER_OVERALL, FOUNDERS, K, STATS, WEIGHTS } from "./constants";
+import { ARCHETYPES, FINISH_LABELS, FOUNDER_OVERALL, FOUNDERS, K, SIGNAL_REFS, STATS, WEIGHTS } from "./constants";
 import { derivePlaystyles } from "./playstyles";
-import type {
-  Archetype,
-  Card,
-  Family,
-  Finish,
-  Position,
-  Profile,
-  Signals,
-  StatKey,
-  Stats,
-} from "./types";
+import type { Archetype, Card, Family, Finish, Position, Signals, StatKey, Stats } from "./types";
 
 const Lg = (x: number) => Math.log10(Math.max(0, x) + 1);
 const sigmoid = (z: number) => 1 / (1 + Math.exp(-z));
-const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const clamp = (x: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, x));
 const mean = (a: number[]) => a.reduce((s, x) => s + x, 0) / a.length;
-const vals = (s: Profile) => STATS.map((k) => s[k]);
 
-// §2 — raw estimates, tuned so the six land on a comparable scale.
-function rawStats(s: Signals): Stats {
+// §1 — one GitHub count → a rating: zero → floor, typical → K.stat.typical,
+// elite → 99, log-scaled in between (each 10× is worth the same within a segment).
+function rate(value: number, ref: { typical: number; elite: number }): number {
+  const { floor, typical } = K.stat;
+  const x = Lg(value);
+  const t = Lg(ref.typical);
+  if (x <= t) return floor + (typical - floor) * (x / t);
+  return typical + (99 - typical) * Math.min(1, (x - t) / (Lg(ref.elite) - t));
+}
+
+// §2 — the six stats, rated straight from the signals. Nothing is normalised
+// against the player's own profile: the card shows what the signals earned.
+function rateStats(s: Signals): Stats {
+  const r = SIGNAL_REFS;
   const o: Stats = {
-    pac: 36 + 12 * Lg(s.recent_contributions),
-    sho: 36 + 13 * Lg(s.total_stars_owned) + 5 * Lg(s.max_repo_stars),
-    pas: 40 + 12 * Lg(s.prs_to_others) + 9 * Lg(s.followers),
-    // DRI = genuine range, square-root scaled so breadth has diminishing returns:
-    // ~65 at one language, ~80 at ten, ~85 at fifteen. The old linear count
-    // saturated (8 languages already ~94, maxed at 9), letting a noisy signal own
-    // the card and crown every polyglot a Fantasista.
-    dri: 58 + 7 * Math.sqrt(s.languages),
-    def: 40 + 14 * Lg(s.reviews + s.issues_closed),
-    phy: 40 + 9 * Lg(s.total_contributions_lifetime) + 2.2 * Math.min(s.active_years, 12),
+    pac: rate(s.recent_contributions, r.recentContributions),
+    sho: 0.7 * rate(s.total_stars_owned, r.stars) + 0.3 * rate(s.max_repo_stars, r.topRepoStars),
+    pas: 0.6 * rate(s.prs_to_others, r.prs) + 0.4 * rate(s.followers, r.followers),
+    // Log-scaled like the rest, so each extra language counts for less.
+    dri: rate(s.languages, r.languages),
+    def: rate(s.reviews + s.issues_closed, r.reviewsAndIssues),
+    phy:
+      0.7 * rate(s.total_contributions_lifetime, r.lifetimeContributions) +
+      0.3 * rate(s.active_years, r.activeYears),
   };
   for (const k of STATS) o[k] = clamp(Math.round(o[k]), 1, 99);
   return o;
 }
 
-// §3.1 — magnitude → gravity-well center the stats sit around.
-function center(s: Signals): number {
-  const { w1, w2, w3, w4, b, lo, hi } = K.magnitude;
-  const M = sigmoid(
-    w1 * Lg(s.total_stars_owned) +
-      w2 * Lg(s.followers) +
-      w3 * Lg(s.total_contributions_lifetime) +
-      w4 * s.account_age_years +
-      b,
-  );
-  return lerp(lo, hi, M);
+// §3 — archetype, then position. Stats are compared with the player's own
+// average only to read the shape; the numbers themselves are never changed.
+function classify(st: Stats): { family: Family; position: Position } {
+  const m = mean(STATS.map((k) => st[k]));
+  const dev = {} as Stats;
+  STATS.forEach((k) => (dev[k] = st[k] - m));
+  const avg = (ks: StatKey[]) => mean(ks.map((k) => dev[k]));
+  const contrast = (a: (typeof ARCHETYPES)[number]) => avg(a.high) - avg(a.low);
+
+  const fits =
+    m < K.position.thinMean
+      ? []
+      : ARCHETYPES.filter(
+          (a) => a.high.every((k) => dev[k] >= K.position.standOut) && a.low.every((k) => dev[k] < 0),
+        ).sort((a, b) => contrast(b) - contrast(a));
+  // Too thin to read, or nothing stands out: an Allrounder, who plays CM until
+  // the user picks a position.
+  if (!fits.length) return { family: "Allrounder", position: "CM" };
+  const family = fits[0].family;
+  return { family, position: splitPosition(family, dev) };
 }
 
-// §3.2 — z-score of their own six.
-function zscore(raw: Stats): Profile {
-  const v = vals(raw);
-  const m = mean(v);
-  const sd = Math.sqrt(mean(v.map((x) => (x - m) ** 2))) || 1;
-  const p = {} as Profile;
-  STATS.forEach((k, i) => (p[k] = (v[i] - m) / sd));
-  return p;
-}
-
-// §3.3 — penalise antagonist pairs so nobody is elite at everything.
-function applyTension(p: Profile): Profile {
-  const out = { ...p };
-  for (const [a, b] of K.tension.pairs) {
-    const overlap = Math.max(0, Math.min(out[a], out[b]));
-    const weaker = out[a] <= out[b] ? a : b;
-    out[weaker] -= K.tension.alpha * overlap;
+// Inside an archetype, the position turns on one stat sitting above or below the
+// player's average. Wide roles come out right-sided; left is the user's choice.
+function splitPosition(family: Exclude<Family, "Allrounder">, dev: Stats): Position {
+  const up = (k: StatKey) => dev[k] >= 0;
+  switch (family) {
+    case "Playmaker":
+      return up("pac") ? "RW" : up("sho") ? "SS" : dev.pas > dev.dri ? "CM" : "CAM";
+    case "Striker":
+      return up("pac") ? "ST" : "CF";
+    case "Anchor":
+      return up("dri") ? "CDM" : "CB";
+    case "Fullback":
+      return up("dri") ? "RWB" : "RFB";
   }
-  return out;
 }
 
-// §3.4 — spike around center; specialists get spikier cards.
-function spike(p: Profile, c: number): Stats {
-  const v = vals(p);
-  const lop = clamp((Math.max(...v) - Math.min(...v)) / 4, 0, 1);
-  const spread = K.spike.base * (1 + lop);
-  const m = mean(v);
-  const raw = {} as Stats;
-  STATS.forEach((k) => (raw[k] = c + spread * (p[k] - m)));
-  // §3.5 — attacking cohesion: the technical four share sub-skills, so pull them
-  // toward their own group mean (preserving order and their collective level)
-  // before rounding. This kills the random-looking 18pt gaps between attacking
-  // stats; DEF/PHY are left free to break away (role explains them).
-  const am = mean(ATTACK_STATS.map((k) => raw[k]));
-  ATTACK_STATS.forEach((k) => (raw[k] = am + K.spike.cohesion * (raw[k] - am)));
-  const stats = {} as Stats;
-  STATS.forEach((k) => (stats[k] = clamp(Math.round(raw[k]), 1, 99)));
-  return stats;
-}
-
-function positionFromShape(st: Stats): { position: Position; family: Family } {
-  const fam: Record<Family, number> = {
-    Forward: st.sho + st.pac,
-    Playmaker: st.pas + st.dri,
-    Anchor: st.def + st.phy,
-  };
-  const family = (Object.keys(fam) as Family[]).sort((a, b) => fam[b] - fam[a])[0];
-  const position: Position =
-    family === "Forward"
-      ? st.pac > st.sho
-        ? "RW"
-        : "ST"
-      : family === "Playmaker"
-        ? st.pas > st.dri
-          ? "CM"
-          : "CAM"
-        : st.def > st.phy
-          ? "CB"
-          : "CDM";
-  return { position, family };
-}
-
-// §3.6 — position-weighted, never a flat mean; stats alone cap at 88.
+// §4 — position-weighted, never a flat mean; stats alone cap at 88.
 function weightedOVR(stats: Stats, family: Family): number {
   const w = WEIGHTS[family];
   const ovr = STATS.reduce((s, k) => s + stats[k] * w[k], 0);
   return Math.min(Math.round(ovr), K.ovrCap);
 }
 
-// §4 — the 88→99 range is bought with years and sustained influence.
+// §5 — the 88→99 range is bought with years and sustained influence.
 function legacyScore(s: Signals): number {
   const { a, b, c, d, e, f, activeCap } = K.legacy;
   const z =
@@ -170,8 +132,8 @@ function archetypeFromShape(st: Stats, finish: Finish): Archetype {
 }
 
 export function buildCard(s: Signals): Card {
-  const stats = spike(applyTension(zscore(rawStats(s))), center(s));
-  const { position, family } = positionFromShape(stats);
+  const stats = rateStats(s);
+  const { position, family } = classify(stats);
   const baseOVR = weightedOVR(stats, family);
   const L = legacyScore(s);
 

@@ -9,6 +9,7 @@ import { loadCardFonts } from "@/lib/og/card";
 import { groupAwards } from "@/lib/awards";
 import { loadTrophyStills, trophyShelf } from "@/lib/og/trophies";
 import type { Card } from "@/lib/scoring/types";
+import { SITE_HOST } from "@/lib/site";
 
 export const runtime = "nodejs";
 export const alt = "GitFut player card";
@@ -69,7 +70,7 @@ export default async function Image({ params }: { params: Promise<{ username: st
           <div style={{ display: "flex", color: "#39d353", fontSize: 26, fontWeight: 700, letterSpacing: 4 }}>GITHUB × WORLD CUP 26</div>
           <div style={{ display: "flex", fontSize: 84, fontWeight: 700, marginTop: 20 }}>@{username}</div>
           <div style={{ display: "flex", fontSize: 34, color: "#a8b3bd", marginTop: 18 }}>Get your GitHub rated out of 99.</div>
-          <div style={{ display: "flex", fontSize: 30, color: "#39d353", fontWeight: 700, marginTop: 26 }}>gitfut.com</div>
+          <div style={{ display: "flex", fontSize: 30, color: "#39d353", fontWeight: 700, marginTop: 26 }}>{SITE_HOST}</div>
         </div>
       ),
       { ...size, fonts, headers: CACHE },
@@ -122,7 +123,7 @@ export default async function Image({ params }: { params: Promise<{ username: st
             </div>
           )}
 
-          <div style={{ display: "flex", fontSize: 26, color: "#6e7681", marginTop: 34 }}>gitfut.com/{card.login}</div>
+          <div style={{ display: "flex", fontSize: 26, color: "#6e7681", marginTop: 34 }}>{SITE_HOST}/{card.login}</div>
         </div>
       </div>
     ),

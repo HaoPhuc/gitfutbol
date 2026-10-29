@@ -3,8 +3,9 @@ import { SAMPLE_CARDS } from "@/lib/github/samples";
 import { loadCardAssets, cardTree } from "@/lib/og/renderCard";
 import { groupAwards } from "@/lib/awards";
 import { loadTrophyStills, trophyShelf } from "@/lib/og/trophies";
+import { SITE_HOST } from "@/lib/site";
 
-// Branded preview for the home page / bare gitfut.com links. Next wires this as
+// Branded preview for the home page / bare-domain links. Next wires this as
 // the default og:image + twitter:image automatically (metadataBase is absolute).
 export const runtime = "nodejs";
 export const alt = "GitFut — your GitHub, rated out of 99";
@@ -61,7 +62,7 @@ export default async function Image() {
 
         {/* url as a caption centered under the card, out of the trophy row's way */}
         <div style={{ position: "absolute", right: 72, bottom: 24, width: CARD_W, display: "flex", justifyContent: "center", fontSize: 26, color: "#6e7681" }}>
-          gitfut.com
+          {SITE_HOST}
         </div>
       </div>
     ),
