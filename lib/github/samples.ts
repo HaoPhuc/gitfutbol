@@ -178,7 +178,7 @@ const SAMPLE_WC: Record<string, WcWindowTotals[]> = {
 const CAPTURED = new Date("2026-07-21T00:00:00Z");
 
 export const SAMPLE_CARDS: Card[] = RAW.map((s) => {
-  const card = buildCard(s);
+  const card = buildCard(s, CAPTURED);
   card.awards = computeAwards(card, SAMPLE_WC[s.login] ?? [], CAPTURED);
   return card;
 });

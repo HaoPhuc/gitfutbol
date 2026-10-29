@@ -16,6 +16,17 @@ export const formatCount = (n: number): string => {
   return String(Math.round(n));
 };
 
+// Market value in euros, transfer-fee style: 47_000_000 → "€47M", 8_500_000 →
+// "€8.5M", 450_000 → "€450K".
+export const formatMoney = (euros: number): string => {
+  if (euros >= 1_000_000) return "€" + compact(euros, 1_000_000, "M");
+  if (euros >= 1000) {
+    const thousands = compact(euros, 1000, "K");
+    return "€" + (thousands === "1000K" ? compact(euros, 1_000_000, "M") : thousands);
+  }
+  return "€" + Math.round(euros);
+};
+
 // Fixed-precision rounding for deterministic geometry / imperative transforms —
 // shared so radar, VS burst and tilt all round identically.
 export const round2 = (n: number) => Math.round(n * 100) / 100;

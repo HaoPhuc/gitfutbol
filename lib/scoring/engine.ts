@@ -3,7 +3,8 @@ import { topLanguageLogo } from "../github/languages";
 import { deriveMetrics, deriveSkillMoves, deriveStyle, deriveWeakFoot, deriveWorkRate } from "./attributes";
 import { ARCHETYPES, FINISH_LABELS, FOUNDER_OVERALL, FOUNDERS, K, SIGNAL_REFS, STATS, WEIGHTS } from "./constants";
 import { derivePlaystyles } from "./playstyles";
-import type { Archetype, Card, Family, Finish, Position, Signals, StatKey, Stats } from "./types";
+import { outlook, seasonSignals } from "./progression";
+import type { Archetype, Card, Family, Finish, Position, SeasonRating, Signals, StatKey, Stats } from "./types";
 
 const Lg = (x: number) => Math.log10(Math.max(0, x) + 1);
 const sigmoid = (z: number) => 1 / (1 + Math.exp(-z));
@@ -131,20 +132,35 @@ function archetypeFromShape(st: Stats, finish: Finish): Archetype {
   return { name: "Mezzala", blurb: "the engine — a relentless box-to-box daily-driver" };
 }
 
-export function buildCard(s: Signals): Card {
+// The whole rating for one set of signals, before any founder override. The live
+// card and every rebuilt season go through it.
+function rateSignals(s: Signals) {
   const stats = rateStats(s);
   const { position, family } = classify(stats);
   const baseOVR = weightedOVR(stats, family);
   const L = legacyScore(s);
+  const overall = clamp(baseOVR + Math.round(K.legacy.bonusMax * L), 1, 99);
+  return { stats, position, family, baseOVR, L, overall, finish: pickFinish(overall, L, s.recent_spike, s.login) };
+}
+
+// `now` dates the season history (the samples pass their capture date).
+export function buildCard(s: Signals, now = new Date()): Card {
+  const rated = rateSignals(s);
+  const { stats, position, family, baseOVR, L } = rated;
 
   // Founders get a forced overall (>89) and the bespoke "founder" tier. We drive
   // `finish` directly rather than via pickFinish: any overall >= 90 would
   // otherwise auto-promote to ICON (and flip club/archetype), hijacking the look.
   const founder = FOUNDERS[s.login.toLowerCase()];
-  const overall = founder
-    ? FOUNDER_OVERALL[s.login.toLowerCase()]
-    : clamp(baseOVR + Math.round(K.legacy.bonusMax * L), 1, 99);
-  const finish: Finish = founder ? "founder" : pickFinish(overall, L, s.recent_spike, s.login);
+  const overall = founder ? FOUNDER_OVERALL[s.login.toLowerCase()] : rated.overall;
+  const finish: Finish = founder ? "founder" : rated.finish;
+  const seasons: SeasonRating[] = [
+    ...seasonSignals(s, now).map(({ year, signals }) => {
+      const r = rateSignals(signals);
+      return { year, current: false, overall: r.overall, position: r.position, finish: r.finish, stats: r.stats };
+    }),
+    { year: now.getUTCFullYear(), current: true, overall, position, finish, stats },
+  ];
   const archetype = founder
     ? { name: "Founder", blurb: "co-founder of GitFut — they built the very scout reading this card" }
     : archetypeFromShape(stats, finish);
@@ -174,6 +190,8 @@ export function buildCard(s: Signals): Card {
     languageLogo,
     ...(founder ? { founder } : null),
     ...(s.years ? { years: s.years } : null),
+    seasons,
+    outlook: outlook(s, overall),
     legacy: { L },
     report: {
       skillMoves: skill.value,

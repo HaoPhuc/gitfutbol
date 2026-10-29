@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { ArrowLeft, TrendingUp } from "lucide-react";
 import type { Card } from "@/lib/scoring/types";
 import PlayerCard from "./PlayerCard";
 import TiltCard from "./TiltCard";
@@ -201,6 +202,15 @@ export default function ResultView({
             <div data-tour="duel">
               <DuelButton login={card.login} />
             </div>
+            {!demo && (
+              <Link
+                href={`/${card.login}/progress`}
+                className="flex h-[46px] w-full items-center justify-center gap-[10px] rounded-xl border border-line bg-white/[0.03] transition-all duration-200 ease-out hover:-translate-y-[1px] hover:border-brand/55 hover:shadow-[0_10px_26px_-12px_rgba(57,211,83,.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60 active:translate-y-0 active:scale-[.985]"
+              >
+                <span className="font-display text-[19px] tracking-[.1em] text-ink">SHOW PROGRESSION</span>
+                <TrendingUp size={17} className="text-brand" aria-hidden />
+              </Link>
+            )}
           </div>
           {/* Mobile cabinet: right under the duel CTA, before the report panels
               stack — the stacked layout's most visible slot after the card. */}
