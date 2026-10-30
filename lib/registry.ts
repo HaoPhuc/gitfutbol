@@ -144,6 +144,20 @@ export async function countPlayers(country?: string): Promise<number> {
   }
 }
 
+// The logins in `logins` that aren't on the board yet, in their given order.
+// A failed read counts them all as new: scouting one twice only costs a rebuild.
+export async function unrecorded(logins: string[]): Promise<string[]> {
+  if (!logins.length) return [];
+  if (!redis) return logins.filter((l) => !memoryStore().has(idOf(l)));
+  try {
+    const raw = await redis.hmget(ENTRIES, ...logins.map(idOf));
+    return logins.filter((_, i) => !raw[i]);
+  } catch (e) {
+    console.error("[registry] read failed:", (e as Error).message);
+    return logins;
+  }
+}
+
 // One player's entry, or null if they've never been scouted.
 export async function getPlayer(login: string): Promise<PlayerEntry | null> {
   const id = idOf(login);
