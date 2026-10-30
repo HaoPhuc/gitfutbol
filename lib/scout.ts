@@ -8,6 +8,7 @@ import { SAMPLE_CARDS } from "./github/samples";
 import { computeAwards, wcBallCandidate, WC_EDITIONS, type WcWindowTotals } from "./awards";
 import type { Card } from "./scoring/types";
 import { RESCOUT_COOLDOWN_SECONDS } from "./rescout";
+import { recordCard } from "./registry";
 
 // Read-through Redis cache for built cards — the single path every scout surface
 // (the /<user> page, the JSON API, the OG image) uses to turn a username into a
@@ -67,7 +68,7 @@ async function buildFresh(username: string, login: string): Promise<Card> {
   const card = buildCard(signalsFromPayload(await fetchProfile(username)));
   card.awards = computeAwards(card, await wcWindowsFor(card, username));
   card.builtAt = new Date().toISOString();
-  await writeCache(login, card);
+  await Promise.all([writeCache(login, card), recordCard(card)]);
   return card;
 }
 
