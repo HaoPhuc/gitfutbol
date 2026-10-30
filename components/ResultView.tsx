@@ -22,6 +22,7 @@ import DistributionPanel from "./DistributionPanel";
 import AwardModal from "./AwardModal";
 import TrophySprite, { AWARD_SPRITES } from "./TrophySprite";
 import { AWARD_META, groupAwards, type AwardGroup } from "@/lib/awards";
+import { teamName } from "@/lib/squad";
 import { confettiPalette, resolveCardTheme, resolveResultTheme } from "./finishTheme";
 import { useReveal } from "@/hooks/useReveal";
 import { burstConfetti } from "@/lib/confetti";
@@ -213,6 +214,15 @@ export default function ResultView({
               >
                 <span className="font-display text-[19px] tracking-[.1em] text-ink">SHOW PROGRESSION</span>
                 <TrendingUp size={17} className="text-brand" aria-hidden />
+              </Link>
+            )}
+            {/* Squads go by the GitHub-derived country, not a flag picked on the card. */}
+            {!demo && canonicalCountry && (
+              <Link
+                href={`/squads/${canonicalCountry}`}
+                className="self-center text-[12px] font-semibold text-ink-soft underline-offset-2 transition hover:text-brand hover:underline"
+              >
+                See the {teamName(canonicalCountry) ?? canonicalCountry.toUpperCase()} squad ↗
               </Link>
             )}
           </div>
