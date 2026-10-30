@@ -7,9 +7,9 @@ import { seedRun } from "@/lib/seed";
 // you run it by hand to seed faster. Without CRON_SECRET the route stays shut.
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 60;
+export const maxDuration = 300; // the Hobby plan's ceiling, and Vercel Cron only fires once a day there
 
-const BUDGET_MS = 40_000; // leaves room under maxDuration for the last scouts in flight
+const BUDGET_MS = 250_000; // leaves room under maxDuration for the last scouts in flight
 
 export async function GET(req: Request) {
   const secret = process.env.CRON_SECRET;
