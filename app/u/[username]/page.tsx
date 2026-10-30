@@ -8,6 +8,7 @@ import { loadCard } from "@/lib/scout";
 import { getRepoStars } from "@/lib/github/stars";
 import { pickFlag } from "@/lib/flagPriority";
 import { recordScout } from "@/lib/analytics";
+import { playerRank } from "@/lib/registry";
 import type { Card } from "@/lib/scoring/types";
 import ScoutRoute from "./ScoutRoute";
 
@@ -80,7 +81,13 @@ export default async function Page({
   const { country: override } = await searchParams;
   // Stars feed the footer "Support the project" link; fetched alongside the
   // scout (its own 1h cache keeps it cheap) so the report matches the home page.
-  const [res, stars] = await Promise.all([loadCard(username), getRepoStars()]);
+  // The leaderboard rank is read once the card resolves, not beside it: a first
+  // scout records the card while building it, so a parallel read would miss it.
+  const scouted = loadCard(username).then(async (res) => ({
+    res,
+    rank: "card" in res ? await playerRank(res.card.login) : null,
+  }));
+  const [{ res, rank }, stars] = await Promise.all([scouted, getRepoStars()]);
   // Flag priority: a shared-link ?country= override wins, else the GitHub-derived
   // country. No IP/geo fallback — we never put the *viewer's* country on someone
   // else's card.
@@ -96,7 +103,7 @@ export default async function Page({
     <div className="relative min-h-screen overflow-x-hidden text-ink">
       <Background />
       {card ? (
-        <ScoutRoute card={card} stars={stars} canonicalCountry={canonicalCountry} />
+        <ScoutRoute card={card} stars={stars} canonicalCountry={canonicalCountry} rank={rank} />
       ) : (
         <NotScouted username={username} error={(res as { error: GithubError }).error} />
       )}

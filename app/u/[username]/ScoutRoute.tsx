@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ResultView from "@/components/ResultView";
 import { writeCardCache } from "@/hooks/useScout";
+import type { BoardRank } from "@/lib/leaderboard";
 import type { Card } from "@/lib/scoring/types";
 
 // Client wrapper: a server component can't pass callbacks across the boundary,
@@ -16,10 +17,12 @@ export default function ScoutRoute({
   card: initial,
   stars,
   canonicalCountry: initialCanonical,
+  rank,
 }: {
   card: Card;
   stars: number | null;
   canonicalCountry: string;
+  rank: BoardRank | null;
 }) {
   const router = useRouter();
   const [card, setCard] = useState(initial);
@@ -53,6 +56,7 @@ export default function ScoutRoute({
       stars={stars}
       canonicalCountry={canonicalCountry}
       onRescouted={onRescouted}
+      rank={rank}
     />
   );
 }
