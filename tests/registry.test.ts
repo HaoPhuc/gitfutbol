@@ -102,6 +102,13 @@ describe("registry on Redis", () => {
     expect(await r.countPlayers()).toBe(1);
   });
 
+  it("tells which logins aren't on the board yet", async () => {
+    const r = await load();
+    await r.recordCard(card("alice", 80));
+    expect(await r.unrecorded(["Alice", "bob", "carol"])).toEqual(["bob", "carol"]);
+    expect(await r.unrecorded([])).toEqual([]);
+  });
+
   it("leaves founder cards out", async () => {
     const r = await load();
     await r.recordCard(card("younesfdj", 93, "dz", { founder: { art: "", accent: "", label: "", tagline: "" } }));

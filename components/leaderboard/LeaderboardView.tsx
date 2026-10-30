@@ -321,7 +321,8 @@ export default function LeaderboardView({ query, page, total, rows, found, elsew
 
       <div className="flex flex-col gap-[6px] text-[12px] leading-[1.5] text-ink-mute">
         <p>
-          A card joins the board the first time it&apos;s scouted and moves when it&apos;s rebuilt. Country comes
+          The board is seeded daily from GitHub&apos;s most followed developers, and any card joins it the first
+          time it&apos;s scouted and moves when it&apos;s rebuilt. Country comes
           from the GitHub profile&apos;s location; the flag you pick on a card doesn&apos;t change it.
         </p>
         {demo && (
