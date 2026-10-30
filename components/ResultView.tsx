@@ -10,6 +10,7 @@ import StoryFrame from "./StoryFrame";
 import CardActions from "./CardActions";
 import DuelButton from "./DuelButton";
 import RescoutLine from "./RescoutLine";
+import RankLine from "./leaderboard/RankLine";
 import FlagPicker from "./FlagPicker";
 import Mascot from "./Mascot";
 import FooterCredit from "./FooterCredit";
@@ -25,6 +26,7 @@ import { AWARD_META, groupAwards, type AwardGroup } from "@/lib/awards";
 import { confettiPalette, resolveCardTheme, resolveResultTheme } from "./finishTheme";
 import { useReveal } from "@/hooks/useReveal";
 import { burstConfetti } from "@/lib/confetti";
+import type { BoardRank } from "@/lib/leaderboard";
 
 const HowItWorksModal = dynamic(() => import("./HowItWorksModal"), { ssr: false });
 
@@ -39,6 +41,8 @@ interface Props {
   canonicalCountry?: string;
   /** Takes the card a re-scout rebuilt; without it the "Scouted … ago" line is hidden. */
   onRescouted?: (card: Card) => void;
+  /** The card's world rank on the leaderboard; null/absent (unranked) hides the line. */
+  rank?: BoardRank | null;
   /** Rendered as the feature tour's demo stage: drop the support pills, which
    *  are promo chrome with nothing to do with the tour (and float above it),
    *  and hold the header still so the camera's scaling doesn't fight it. */
@@ -56,6 +60,7 @@ export default function ResultView({
   stars,
   canonicalCountry = "",
   onRescouted,
+  rank = null,
   demo = false,
 }: Props) {
   const captureRef = useRef<HTMLDivElement>(null);
@@ -111,7 +116,9 @@ export default function ResultView({
         }}
       />
 
-      {/* top bar: BACK button + mascot on the left, "how it works" on the right */}
+      {/* top bar: BACK button + mascot on the left, "leaderboard" and "how it
+          works" on the right. The leaderboard link gives way first on narrow
+          screens (the rank line under the metrics links there too). */}
       <div className="mb-[8px] mt-[clamp(8px,2vh,18px)] flex w-full shrink-0 items-center justify-between gap-[10px]">
         <div className="flex items-center gap-[10px]">
           <button
@@ -137,6 +144,12 @@ export default function ResultView({
           <Mascot size={40} kick={false} ball={false} animate={false} />
         </div>
         <div className="flex items-center gap-[clamp(10px,2vw,16px)] justify-end">
+          <Link
+            href="/leaderboard"
+            className="text-[12.5px] font-semibold text-ink-soft underline-offset-2 transition hover:text-brand hover:underline max-[640px]:hidden"
+          >
+            leaderboard ↗
+          </Link>
           <button
             type="button"
             onClick={() => setModalOpen(true)}
@@ -231,7 +244,12 @@ export default function ResultView({
         <div className="flex max-[980px]:order-3 max-[980px]:w-full max-[980px]:max-w-[420px] max-[980px]:justify-center">
           <div className="flex w-full max-w-[360px] flex-col gap-[14px]">
             <MetricsPanel card={card} />
-            {onRescouted && <RescoutLine card={card} onRescouted={onRescouted} />}
+            {/* The two quiet lines sit together; empty:hidden drops the gap
+                while neither has anything to show. */}
+            <div className="flex flex-col gap-[4px] empty:hidden">
+              {onRescouted && <RescoutLine card={card} onRescouted={onRescouted} />}
+              {!demo && rank && <RankLine login={card.login} rank={rank} />}
+            </div>
             {hasAwards ? (
               <>
                 <div className="max-[980px]:hidden" data-tour="trophies">
