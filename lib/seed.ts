@@ -22,7 +22,7 @@ const QUEUE = `gitfut:seed:${V}:queue`;
 const CURSOR = `gitfut:seed:${V}:cursor`; // next page's follower ceiling; "-1" once the ranking is exhausted
 const LOCK = `gitfut:seed:${V}:lock`;
 
-const PARALLEL = 4; // scouts in flight at once
+const PARALLEL = 8; // scouts in flight at once
 const PAGES_PER_RUN = 3; // ranking pages one run may fetch (search allows 30/min)
 
 export interface SeedReport {
