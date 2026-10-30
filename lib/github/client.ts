@@ -567,6 +567,29 @@ export async function fetchWindows(
   }
 }
 
+// ---- shared with the org layer (lib/github/org) ----
+
+// The username screen fetchProfile applies; organization logins share the charset.
+export const isValidLogin = (login: string): boolean => VALID.test(login);
+
+// One GraphQL query about a login, on the profile scout's machinery: retries,
+// token health, error triage, the login's hash-sharded token and one failover on
+// a rate limit. gql reads `data.user`, so the query aliases its root field to it
+// (`user: organization(login: $login) { … }`). Null means GitHub said NOT_FOUND.
+export async function queryLogin<T>(query: string, login: string): Promise<T | null> {
+  const pool = tokenPool();
+  if (!pool.length) return fail("config", "Server is missing a GitHub token.");
+  const tok = pickToken(login, pool) as PoolToken;
+  try {
+    return (await gql<T>(query, login, tok)).user;
+  } catch (e) {
+    if ((e as GithubError).type !== "ratelimit" || pool.length < 2) throw e;
+    const fallback = await pickFailover(tok.idx, pool);
+    if (!fallback) throw e;
+    return (await gql<T>(query, login, fallback)).user;
+  }
+}
+
 export async function fetchProfile(
   username: string,
   now = new Date(),

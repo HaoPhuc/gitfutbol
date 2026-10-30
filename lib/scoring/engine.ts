@@ -13,7 +13,8 @@ const mean = (a: number[]) => a.reduce((s, x) => s + x, 0) / a.length;
 
 // §1 — one GitHub count → a rating: zero → floor, typical → K.stat.typical,
 // elite → 99, log-scaled in between (each 10× is worth the same within a segment).
-function rate(value: number, ref: { typical: number; elite: number }): number {
+// Club ratings (lib/scoring/club) use the same curve on their own anchors.
+export function rate(value: number, ref: { typical: number; elite: number }): number {
   const { floor, typical } = K.stat;
   const x = Lg(value);
   const t = Lg(ref.typical);

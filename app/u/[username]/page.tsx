@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Background from "@/components/Background";
 import { type GithubError } from "@/lib/github/client";
+import { isOrganization } from "@/lib/github/org";
 import { loadCard } from "@/lib/scout";
 import { getRepoStars } from "@/lib/github/stars";
 import { pickFlag } from "@/lib/flagPriority";
@@ -29,8 +30,11 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
   return { title: `@${username} · GitFut`, robots: { index: false } };
 }
 
-function NotScouted({ username, error }: { username: string; error: GithubError }) {
+async function NotScouted({ username, error }: { username: string; error: GithubError }) {
   const rateLimited = error.type === "ratelimit";
+  // An organization isn't a GitHub user, so scouting one comes back notfound:
+  // point it to its club instead.
+  const isOrg = error.type === "notfound" && (await isOrganization(username));
   // "No file found" is reserved for errors that are about the USERNAME
   // (missing or impossible); a GitHub-side failure must not blame the user.
   const noSuchUser = error.type === "notfound" || error.type === "invalid";
@@ -47,6 +51,14 @@ function NotScouted({ username, error }: { username: string; error: GithubError 
       <div className="font-display text-[12px] font-bold tracking-[.3em] text-brand">SCOUT REPORT</div>
       <h1 className="font-display mt-3 text-[clamp(30px,6vw,48px)] font-black leading-[.95]">{heading}</h1>
       <p className="mt-3 text-[15.5px] leading-[1.5] text-ink-soft">{message}</p>
+      {isOrg && (
+        <Link
+          href={`/club/${username}`}
+          className="mt-3 text-[15.5px] font-semibold text-brand underline-offset-4 transition hover:text-brand-hi hover:underline"
+        >
+          @{username} is an organization. See its club ↗
+        </Link>
+      )}
       <Link
         href="/"
         className="font-display mt-7 inline-flex h-[46px] items-center rounded-xl bg-brand px-6 text-[16px] tracking-[.06em] text-[#04130a] transition hover:bg-brand-hi"
