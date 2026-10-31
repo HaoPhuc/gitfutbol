@@ -2,7 +2,7 @@
 
 import { memo } from "react";
 
-// GitFut mascot — the cute wolf biting the ball (public/logo). Small sizes swap
+// GitFutbol mascot — the cute wolf biting the ball (public/logo). Small sizes swap
 // to the simpler head, because the facets and rays turn to mush below about
 // 96px. `animate` adds a gentle float (used on the hero/loading screen). The
 // legacy `kick`/`ball` props are accepted but no longer composite anything.
@@ -20,7 +20,7 @@ function Mascot({ size = 220, className, animate = true }: MascotProps) {
   return (
     <img
       src={size <= 96 ? "/logo/wolf-cute-small.svg" : "/logo/wolf-cute.svg"}
-      alt="GitFut mascot — a cute purple wolf biting a football"
+      alt="GitFutbol mascot — a cute purple wolf biting a football"
       width={size}
       height={size}
       className={`${animate ? "animate-float" : ""} ${className ?? ""}`}

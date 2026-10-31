@@ -21,7 +21,7 @@ export const TOUR_STEPS: readonly TourStep[] = [
     key: "trophies",
     target: "trophies",
     kicker: "THE TROPHY CABINET",
-    body: "GitFut now hands out real silverware. Every trophy is judged on real GitHub history and carries the story of why it was won.",
+    body: "GitFutbol now hands out real silverware. Every trophy is judged on real GitHub history and carries the story of why it was won.",
     pad: 24,
     maxScale: 2.1,
   },

@@ -15,8 +15,8 @@ export default function SupportProductHunt() {
       href={PH_URL}
       target="_blank"
       rel="noopener"
-      aria-label="Support GitFut on Product Hunt"
-      title="Support GitFut on Product Hunt"
+      aria-label="Support GitFutbol on Product Hunt"
+      title="Support GitFutbol on Product Hunt"
       className="animate-rise-soft fixed bottom-[calc(clamp(14px,3vh,22px))] right-[clamp(14px,3vw,22px)] z-40 flex h-[44px] items-center gap-[8px] rounded-full border border-line bg-panel/90 px-[16px] text-[12.5px] font-semibold leading-none text-ink-soft shadow-[0_8px_24px_-8px_rgba(1,4,9,.7)] backdrop-blur-[6px] transition-all duration-200 ease-out hover:-translate-y-[1px] hover:border-[#da552f]/50 hover:text-ink hover:shadow-[0_8px_24px_-8px_rgba(1,4,9,.7),0_0_14px_rgba(218,85,47,.22)] active:translate-y-0 active:scale-[.98] max-[560px]:w-[44px] max-[560px]:justify-center max-[560px]:gap-0 max-[560px]:px-0"
       style={{
         animationDelay: "1.2s",

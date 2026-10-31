@@ -19,8 +19,8 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
   const res = await loadCard(username);
   if ("card" in res) {
     return {
-      title: `${res.card.name} — ${res.card.overall} ${res.card.finishLabel} · GitFut`,
-      description: `${res.card.name} scouted on GitFut: ${res.card.overall} OVR ${res.card.position}, ${res.card.archetype}.`,
+      title: `${res.card.name} — ${res.card.overall} ${res.card.finishLabel} · GitFutbol`,
+      description: `${res.card.name} scouted on GitFutbol: ${res.card.overall} OVR ${res.card.position}, ${res.card.archetype}.`,
       alternates: { canonical: `/${res.card.login}` },
       twitter: { card: "summary_large_image" },
       // og:image comes from the file-convention opengraph-image.tsx (the landscape
@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
     };
   }
   // Not a real profile — keep these soft-404s out of the index.
-  return { title: `@${username} · GitFut`, robots: { index: false } };
+  return { title: `@${username} · GitFutbol`, robots: { index: false } };
 }
 
 async function NotScouted({ username, error }: { username: string; error: GithubError }) {

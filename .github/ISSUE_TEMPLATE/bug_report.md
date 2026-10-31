@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Something in GitFut isn't working right
+about: Something in GitFutbol isn't working right
 title: ""
 labels: bug
 assignees: ""

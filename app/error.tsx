@@ -13,7 +13,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
   useEffect(() => {
     // Surfaces in the server / Vercel logs; the digest ties a user-reported
     // failure to its log line.
-    console.error("[gitfut] route error:", error);
+    console.error("[gitfutbol] route error:", error);
   }, [error]);
 
   return (

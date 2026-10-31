@@ -12,11 +12,11 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: { params: Promise<{ username: string }> }): Promise<Metadata> {
   const { username } = await params;
   const res = await loadCard(username);
-  if (!("card" in res)) return { title: `@${username} · GitFut`, robots: { index: false } };
+  if (!("card" in res)) return { title: `@${username} · GitFutbol`, robots: { index: false } };
   const { card } = res;
   return {
-    title: `${card.name}: progression · GitFut`,
-    description: `${card.name}'s rating season by season, potential and estimated market value on GitFut.`,
+    title: `${card.name}: progression · GitFutbol`,
+    description: `${card.name}'s rating season by season, potential and estimated market value on GitFutbol.`,
     alternates: { canonical: `/${card.login}/progress` },
   };
 }

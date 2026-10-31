@@ -10,8 +10,8 @@ import { REGISTRY_IS_DEMO, countPlayers, getPlayer, playerRank, topPlayers } fro
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Leaderboard · GitFut",
-  description: "Every GitHub profile scouted on GitFut, ranked by overall rating. Find your rank, worldwide or by country.",
+  title: "Leaderboard · GitFutbol",
+  description: "Every GitHub profile scouted on GitFutbol, ranked by overall rating. Find your rank, worldwide or by country.",
   alternates: { canonical: "/leaderboard" },
 };
 

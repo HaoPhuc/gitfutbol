@@ -99,7 +99,7 @@ function PlayerCard({ card }: { card: Card }) {
   });
 
   return (
-    <div className="gitfut-card-frame" style={wrap}>
+    <div className="gitfutbol-card-frame" style={wrap}>
       {/* tier background art */}
       <img
         src={t.bg}
@@ -123,7 +123,7 @@ function PlayerCard({ card }: { card: Card }) {
       )}
       {ring ? (
         // Sun cards hold the photo in a plain circle. No mask here, so unlike the
-        // feathered avatar below it needs no data-gitfut-avatar bake on WebKit.
+        // feathered avatar below it needs no data-gitfutbol-avatar bake on WebKit.
         <div
           style={{
             position: "absolute",
@@ -146,7 +146,7 @@ function PlayerCard({ card }: { card: Card }) {
         </div>
       ) : (
         <div
-          data-gitfut-avatar
+          data-gitfutbol-avatar
           style={{
             position: "absolute",
             inset: 0,
@@ -354,10 +354,10 @@ function PlayerCard({ card }: { card: Card }) {
 
       {/* signature — maker's mark (bottom-left) + handle (bottom-right) on the
           lower shield. Hidden on the live card; revealed only on the export
-          clone (CardActions tags it `.gitfut-capturing`), so it lands in every
+          clone (CardActions tags it `.gitfutbol-capturing`), so it lands in every
           download / copy / share image but never on screen. See lib/capture.ts
-          + the `.gitfut-signature` rule in globals. */}
-      <div className="gitfut-signature">
+          + the `.gitfutbol-signature` rule in globals. */}
+      <div className="gitfutbol-signature">
         <div
           style={{
             ...at(signature.left, signature.top),

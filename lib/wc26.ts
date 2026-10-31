@@ -2,7 +2,7 @@ import { type Country, searchCountries } from "./countries";
 
 // The 48 teams qualified for the 2026 World Cup, keyed by the flag asset code we
 // already ship (public/badges/flags/<code>.png). This is the whole point of the
-// picker change: gitfut is a World-Cup-26 app, but the flag list is a flat ISO
+// picker change: gitfutbol is a World-Cup-26 app, but the flag list is a flat ISO
 // dump of ~250 countries, so finding your national team means scrolling past 200
 // that aren't in the tournament.
 //

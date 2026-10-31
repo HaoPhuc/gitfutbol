@@ -28,7 +28,7 @@ import { SITE_HOST } from "@/lib/site";
 
 export const runtime = "nodejs";
 export const alt =
-  "GitFut Scout Duel — two player cards facing off across a lightning strike";
+  "GitFutbol Scout Duel — two player cards facing off across a lightning strike";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

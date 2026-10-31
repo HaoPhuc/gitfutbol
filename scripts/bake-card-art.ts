@@ -6,7 +6,7 @@
 // Usage:  npx tsx scripts/bake-card-art.ts
 //
 // Every shadow leans purple so the metals sit in the wolf's family, and the shape
-// is GitFut's own rather than a copy of the FUT shield. Founders keep their
+// is GitFutbol's own rather than a copy of the FUT shield. Founders keep their
 // bespoke art and are not baked here.
 import { join } from "node:path";
 import sharp from "sharp";

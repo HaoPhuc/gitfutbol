@@ -1,11 +1,13 @@
 import Background from "@/components/Background";
 import AppShell from "@/components/AppShell";
 import { getRepoStars } from "@/lib/github/stars";
+import { SAMPLE_LOGINS } from "@/lib/github/samples";
 import { getScoutCount } from "@/lib/analytics";
+import { getPlayer } from "@/lib/registry";
 import { SITE_URL } from "@/lib/site";
 
-// Dynamic so the live scout count is fresh per load (the stars fetch keeps its
-// own 1h cache regardless).
+// Dynamic so the live scout count and the fan's ratings are fresh per load (the
+// stars fetch keeps its own 1h cache regardless).
 export const dynamic = "force-dynamic";
 
 const JSON_LD = {
@@ -15,12 +17,12 @@ const JSON_LD = {
       "@type": "WebSite",
       "@id": `${SITE_URL}/#website`,
       url: SITE_URL,
-      name: "GitFut",
+      name: "GitFutbol",
       description: "Turn any GitHub profile into a player card rated out of 99.",
     },
     {
       "@type": "WebApplication",
-      name: "GitFut",
+      name: "GitFutbol",
       url: SITE_URL,
       applicationCategory: "DeveloperApplication",
       operatingSystem: "Web",
@@ -33,12 +35,16 @@ const JSON_LD = {
 };
 
 export default async function Home() {
-  const [stars, scoutCount] = await Promise.all([getRepoStars(), getScoutCount()]);
+  const [stars, scoutCount, fan] = await Promise.all([
+    getRepoStars(),
+    getScoutCount(),
+    Promise.all(SAMPLE_LOGINS.map(getPlayer)),
+  ]);
   return (
     <div className="relative min-h-screen overflow-x-hidden text-ink">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
       <Background />
-      <AppShell stars={stars} scoutCount={scoutCount} />
+      <AppShell stars={stars} scoutCount={scoutCount} fan={fan} />
     </div>
   );
 }
