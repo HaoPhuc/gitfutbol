@@ -3,9 +3,9 @@
 import type { CSSProperties } from "react";
 import type { StatKey } from "@/lib/scoring/types";
 import type { Club } from "@/lib/scoring/club";
-import { languageLogoUrl } from "@/lib/github/languages";
+import { isDarkLogo, languageLogoUrl } from "@/lib/github/languages";
 import { AVATAR_CQW, evenWeeks, yearRingUri } from "@/lib/yearRing";
-import { CARD_THEME, LOGO_PLATE } from "../finishTheme";
+import { CARD_THEME, LIGHTEN_LOGO } from "../finishTheme";
 
 // A club on the player card's 540×820 frame (see PlayerCard, whose positions and
 // sizes this mirrors): the tier art with an even Year Ring (a club has no single
@@ -155,10 +155,7 @@ export default function ClubCard({ club }: { club: Club }) {
             width: "11.875%",
             height: "7.5%",
             objectFit: "contain",
-            boxSizing: "border-box",
-            padding: `${LOGO_PLATE.padding}cqw`,
-            background: LOGO_PLATE.background,
-            borderRadius: `${LOGO_PLATE.radius}cqw`,
+            filter: isDarkLogo(club.languageLogo.slug) ? LIGHTEN_LOGO : undefined,
           }}
         />
       )}

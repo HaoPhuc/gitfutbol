@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { LANGUAGE_SLUGS, languageLogoUrl, logoSlugFor, rankLanguages, topLanguageLogo } from "@/lib/github/languages";
+import { LANGUAGE_SLUGS, isDarkLogo, languageLogoUrl, logoSlugFor, rankLanguages, topLanguageLogo } from "@/lib/github/languages";
 
 // We test the language DECISIONS: deterministic ranking with markup demotion, the
 // GitHub-name→Devicon-id map (incl. display names + the Go wordmark), and that the
@@ -178,5 +178,23 @@ describe("ReScript (Devicon lacks it — overridden to Material Icon Theme)", ()
     expect(languageLogoUrl("rescript")).toBe(
       "https://cdn.jsdelivr.net/gh/PKief/vscode-material-icon-theme/icons/rescript.svg",
     );
+  });
+});
+
+describe("isDarkLogo", () => {
+  it("flags the near-black marks that vanish on a dark card", () => {
+    expect(isDarkLogo(logoSlugFor("Rust")!)).toBe(true);
+    expect(isDarkLogo(logoSlugFor("Shell")!)).toBe(true);
+  });
+
+  it("leaves the full-colour logos as they are", () => {
+    expect(isDarkLogo(logoSlugFor("C++")!)).toBe(false);
+    expect(isDarkLogo(logoSlugFor("TypeScript")!)).toBe(false);
+  });
+
+  it("only names logos that are in the catalog", () => {
+    const dark = ["astro", "awk", "shell", "cobol", "coffeescript", "crystal", "emacs lisp", "handlebars", "purescript", "rust", "solidity", "tex"];
+    expect(Object.values(LANGUAGE_SLUGS).filter(isDarkLogo).length).toBeGreaterThanOrEqual(dark.length);
+    for (const name of dark) expect(isDarkLogo(LANGUAGE_SLUGS[name])).toBe(true);
   });
 });

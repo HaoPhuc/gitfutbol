@@ -85,9 +85,9 @@ export const CARD_THEME: Record<Finish, CardTheme> = {
   },
 };
 
-// Language logos are full-colour on transparent, and plenty are near-black (Rust),
-// so on a dark sun card they sit on this pale plate. In cqw, card width / 100.
-export const LOGO_PLATE = { background: "#F4EFFB", padding: 1, radius: 1.6 };
+// CSS filter for a near-black language logo (isDarkLogo) on a dark sun card: flips
+// it light and keeps its hues, so Rust turns white and Astro keeps its orange flame.
+export const LIGHTEN_LOGO = "invert(1) hue-rotate(180deg)";
 
 // Per-card theme: identical to CARD_THEME for everyone except founders, who get
 // their own art, a near-white ink, and a glow/halo derived from their accent.
