@@ -189,6 +189,7 @@ export function buildCard(s: Signals, now = new Date()): Card {
     archetypeBlurb: archetype.blurb,
     topLanguage: s.topLanguage ?? null,
     languageLogo,
+    ...(s.orgs ? { orgs: s.orgs } : null),
     ...(founder ? { founder } : null),
     ...(s.years ? { years: s.years } : null),
     seasons,

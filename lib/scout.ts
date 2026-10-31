@@ -26,7 +26,7 @@ import { recordCard } from "./registry";
 // Namespaced alongside gitfut:scouts:total. The version segment lets a deploy
 // that changes buildCard's output shape or scoring invalidate every entry at
 // once (bump it) instead of serving stale-shaped cards until their TTL lapses.
-const CACHE_VERSION = "v5"; // v5: cards carry builtAt for the re-scout line
+const CACHE_VERSION = "v6"; // v6: cards carry the player's orgs for team chemistry
 const CARD_TTL_SECONDS = 120 * 60; // 2h — GitHub stats move slowly; longer TTL = fewer refetches of hot profiles under load.
 
 const normalizeLogin = (username: string) => username.trim().replace(/^@/, "").toLowerCase();
