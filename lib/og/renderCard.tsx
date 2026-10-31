@@ -2,8 +2,8 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { Card, StatKey } from "@/lib/scoring/types";
-import { LOGO_PLATE, resolveCardTheme } from "@/components/finishTheme";
-import { languageLogoUrl } from "@/lib/github/languages";
+import { resolveCardTheme } from "@/components/finishTheme";
+import { isDarkLogo, languageLogoUrl } from "@/lib/github/languages";
 import { cardDisplayName } from "@/lib/text";
 import { SITE_HOST } from "@/lib/site";
 import { AVATAR_CQW, evenWeeks, yearRingUri } from "@/lib/yearRing";
@@ -112,6 +112,26 @@ async function avatarDataUri(url: string, bw: number, bh: number, masks: string[
   }
 }
 
+// Satori has no CSS filters, so a near-black logo is flipped here to match
+// LIGHTEN_LOGO on the live card. Falls back to the logo as it is.
+async function lightLogoDataUri(url: string, size: number): Promise<string | null> {
+  const r = await fetchBytes(url);
+  if (!r) return null;
+  try {
+    const sharp = (await import("sharp")).default;
+    const out = await sharp(r.buf, { density: 300 })
+      .resize(size, size, { fit: "inside" })
+      .negate({ alpha: false })
+      .modulate({ hue: 180 })
+      .png()
+      .toBuffer();
+    return `data:image/png;base64,${out.toString("base64")}`;
+  } catch (e) {
+    console.error("[renderCard] sharp logo flip failed:", (e as Error).message);
+    return `data:${r.mime};base64,${r.buf.toString("base64")}`;
+  }
+}
+
 // Load all image assets for the card at a given render width. Best-effort: a
 // missing asset degrades gracefully, never throws.
 // `withFonts` lets a caller that already has the (identical, static) font set
@@ -124,6 +144,7 @@ export async function loadCardAssets(card: Card, w: number, withFonts = true) {
   const avH = t.ring ? avD : Math.round((w * 70) / 100);
   const bgRel = t.bg.replace(/\.webp$/, ".png"); // Satori can't decode webp
   const ring = t.ring ? yearRingUri(card.weeks ?? evenWeeks(card.finish), t.ring) : null;
+  const slug = card.languageLogo?.slug;
   const [fonts, bg, avatar, flag, logo] = await Promise.all([
     withFonts
       ? loadCardFonts()
@@ -131,7 +152,11 @@ export async function loadCardAssets(card: Card, w: number, withFonts = true) {
     fileDataUri(publicFile(bgRel), "image/png"),
     avatarDataUri(card.avatarUrl, avW, avH, t.ring ? circleMask(avD) : featherMasks(avW, avH)),
     card.country ? fileDataUri(publicFile(`/badges/flags/${card.country}.png`), "image/png") : Promise.resolve(null),
-    card.languageLogo ? fetchDataUri(languageLogoUrl(card.languageLogo.slug)) : Promise.resolve(null),
+    !slug
+      ? Promise.resolve(null)
+      : ring && isDarkLogo(slug)
+        ? lightLogoDataUri(languageLogoUrl(slug), Math.round(w / 4))
+        : fetchDataUri(languageLogoUrl(slug)),
   ]);
   return { fonts, bg, ring, avatar, flag, logo, avW, avH };
 }
@@ -194,23 +219,7 @@ export function cardTree(card: Card, assets: CardAssets, w: number) {
       {flag && <img alt="" src={flag} style={{ ...at(17.59, 33.17), width: "14.81%", height: "5.73%", objectFit: "contain" }} />}
 
       {/* top language logo */}
-      {logo && ring ? (
-        <div
-          style={{
-            ...at(19.06, 42.25),
-            width: "11.875%",
-            height: "7.5%",
-            display: "flex",
-            padding: cqw(LOGO_PLATE.padding),
-            backgroundColor: LOGO_PLATE.background,
-            borderRadius: cqw(LOGO_PLATE.radius),
-          }}
-        >
-          <img alt="" src={logo} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-        </div>
-      ) : (
-        logo && <img alt="" src={logo} style={{ ...at(19.06, 42.25), width: "11.875%", height: "7.5%", objectFit: "contain" }} />
-      )}
+      {logo && <img alt="" src={logo} style={{ ...at(19.06, 42.25), width: "11.875%", height: "7.5%", objectFit: "contain" }} />}
 
       {/* name — centered across the card */}
       <div style={{ position: "absolute", left: 0, top: "53.66%", width: "100%", display: "flex", justifyContent: "center" }}>

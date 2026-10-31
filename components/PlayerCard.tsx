@@ -2,11 +2,11 @@
 
 import { memo, type CSSProperties } from "react";
 import type { Card, StatKey } from "@/lib/scoring/types";
-import { languageLogoUrl } from "@/lib/github/languages";
+import { isDarkLogo, languageLogoUrl } from "@/lib/github/languages";
 import { cardDisplayName } from "@/lib/text";
 import { SITE_HOST } from "@/lib/site";
 import { AVATAR_CQW, evenWeeks, yearRingUri } from "@/lib/yearRing";
-import { LOGO_PLATE, resolveCardTheme } from "./finishTheme";
+import { LIGHTEN_LOGO, resolveCardTheme } from "./finishTheme";
 
 // Faithful port of the Python FUT generator's 540×820 layout. Positions are
 // percentages of the card (x/540, y/820); font sizes are cqw (px/540×100) so the
@@ -278,10 +278,11 @@ function PlayerCard({ card }: { card: Card }) {
       )}
 
       {/* top language logo — a transparent PNG in the left identity column (under
-          the flag), taking the slot the club badge used to occupy, on a pale plate
-          on sun cards (see LOGO_PLATE). crossOrigin keeps html-to-image export
-          untainted; onError hides it on a CDN miss. Cards without a logo leave the
-          slot empty. */}
+          the flag), taking the slot the club badge used to occupy. The catalog's
+          logos are full-colour on a transparent background, so they read on the
+          card art with no plate; the few near-black ones flip light on sun cards
+          (isDarkLogo). crossOrigin keeps html-to-image export untainted; onError
+          hides it on a CDN miss. Cards without a logo leave the slot empty. */}
       {card.languageLogo && (
         <img
           src={languageLogoUrl(card.languageLogo.slug)}
@@ -296,14 +297,7 @@ function PlayerCard({ card }: { card: Card }) {
             width: "11.875%",
             height: "7.5%",
             objectFit: "contain",
-            ...(ring
-              ? {
-                  boxSizing: "border-box",
-                  padding: `${LOGO_PLATE.padding}cqw`,
-                  background: LOGO_PLATE.background,
-                  borderRadius: `${LOGO_PLATE.radius}cqw`,
-                }
-              : null),
+            filter: ring && isDarkLogo(card.languageLogo.slug) ? LIGHTEN_LOGO : undefined,
           }}
         />
       )}
