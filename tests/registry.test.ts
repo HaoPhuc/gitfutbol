@@ -109,6 +109,14 @@ describe("registry on Redis", () => {
     expect(await r.unrecorded([])).toEqual([]);
   });
 
+  it("keeps a card's orgs on its entry", async () => {
+    const r = await load();
+    await r.recordCard(card("alice", 80, "fr", { orgs: ["vercel"] }));
+    await r.recordCard(card("bob", 80));
+    expect((await r.getPlayer("alice"))?.orgs).toEqual(["vercel"]);
+    expect((await r.getPlayer("bob"))?.orgs).toBeUndefined();
+  });
+
   it("leaves founder cards out", async () => {
     const r = await load();
     await r.recordCard(card("younesfdj", 93, "dz", { founder: { art: "", accent: "", label: "", tagline: "" } }));

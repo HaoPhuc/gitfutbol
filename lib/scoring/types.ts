@@ -35,6 +35,7 @@ export interface Signals {
   // most-used. Optional so hand-authored sample Signals stay valid.
   rankedLanguages?: string[];
   topLanguage?: string | null;
+  orgs?: string[]; // lowercase org logins they committed to this year, most commits first
   recent_contributions: number;
   active_days_recent: number;
   active_years: number;
@@ -159,6 +160,9 @@ export interface Card {
   // Both optional so previously serialized cards (localStorage) stay valid.
   topLanguage?: string | null;
   languageLogo?: { name: string; slug: string } | null;
+  // Orgs they committed to this year (see Signals), behind team chemistry.
+  // Optional so previously serialized cards stay valid.
+  orgs?: string[];
   // Set only for gitfut founders — their bespoke card art/accent + hint metadata.
   // Optional so every other card (and previously serialized ones) stay valid.
   founder?: FounderMeta;

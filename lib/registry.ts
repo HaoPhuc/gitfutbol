@@ -26,6 +26,7 @@ export interface PlayerEntry {
   topLanguage: string | null;
   stats: Stats;
   builtAt?: string;
+  orgs?: string[]; // absent on entries recorded before cards carried them
 }
 
 export interface RankedPlayer {
@@ -52,6 +53,7 @@ const toEntry = (card: Card): PlayerEntry => ({
   topLanguage: card.topLanguage ?? null,
   stats: card.stats,
   ...(card.builtAt ? { builtAt: card.builtAt } : null),
+  ...(card.orgs ? { orgs: card.orgs } : null),
 });
 
 const idOf = (login: string) => login.toLowerCase();

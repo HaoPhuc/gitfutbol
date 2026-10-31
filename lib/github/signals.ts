@@ -50,6 +50,7 @@ export function signalsFromPayload(p: RawPayload, now = Date.now()): Signals {
     languages,
     rankedLanguages,
     topLanguage: rankedLanguages[0] ?? null,
+    orgs: p.orgs,
     recent_contributions,
     active_days_recent: p.recentActiveDays,
     active_years,
