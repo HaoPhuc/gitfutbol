@@ -98,6 +98,24 @@ export async function recordCard(card: Card): Promise<void> {
   }
 }
 
+// Takes a player off the board, for an account merged into another (lib/merge).
+export async function removePlayer(login: string): Promise<void> {
+  const id = idOf(login);
+  if (!redis) {
+    memoryStore().delete(id);
+    return;
+  }
+  try {
+    const previous = await redis.hget(ENTRIES, id);
+    const country = previous ? (JSON.parse(previous) as PlayerEntry).country : "";
+    const tx = redis.multi().hdel(ENTRIES, id).zrem(WORLD, id);
+    if (country) tx.zrem(countryKey(country), id);
+    await tx.exec();
+  } catch (e) {
+    console.error("[registry] remove failed:", (e as Error).message);
+  }
+}
+
 // ---- reads ---------------------------------------------------------------------
 // Each returns the empty answer (not an error) if Redis fails mid-request.
 

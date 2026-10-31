@@ -31,6 +31,7 @@ async function get<T>(path: string): Promise<T> {
   if (res.status === 403 || res.status === 429) {
     throw { type: "ratelimit", message: "GitHub search rate limit hit." } satisfies GithubError;
   }
+  if (res.status === 404) throw { type: "notfound", message: "Not on GitHub." } satisfies GithubError;
   if (!res.ok) throw { type: "network", message: `GitHub search failed (${res.status}).` } satisfies GithubError;
   return (await res.json()) as T;
 }
@@ -47,4 +48,15 @@ export async function followerRankPage(atMost: number | null, size = 100): Promi
   // Search results don't carry follower counts; the last user's profile does.
   const last = await get<{ followers: number }>(`/users/${encodeURIComponent(logins[logins.length - 1])}`);
   return { logins, lowest: last.followers };
+}
+
+// An account's bio, "" when it has none, or null when there's no such account.
+export async function accountBio(login: string): Promise<string | null> {
+  try {
+    const user = await get<{ bio: string | null }>(`/users/${encodeURIComponent(login)}`);
+    return user.bio ?? "";
+  } catch (e) {
+    if ((e as GithubError).type === "notfound") return null;
+    throw e;
+  }
 }
