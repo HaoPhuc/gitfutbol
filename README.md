@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="public/logo/wolf-head.svg" width="120" alt="GitFut wolf logo">
+<img src="public/logo/wolf-cute.svg" width="120" alt="GitFut wolf logo">
 
 # GitFut
 

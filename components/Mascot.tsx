@@ -2,10 +2,10 @@
 
 import { memo } from "react";
 
-// GitFut mascot — the low-poly wolf logo (public/logo). Small sizes swap to the
-// solid head, because the facets turn to mush below about 64px. `animate` adds
-// a gentle float (used on the hero/loading screen). The legacy `kick`/`ball`
-// props are accepted but no longer composite anything.
+// GitFut mascot — the cute wolf biting the ball (public/logo). Small sizes swap
+// to the simpler head, because the facets and rays turn to mush below about
+// 96px. `animate` adds a gentle float (used on the hero/loading screen). The
+// legacy `kick`/`ball` props are accepted but no longer composite anything.
 interface MascotProps {
   size?: number;
   className?: string;
@@ -19,8 +19,8 @@ interface MascotProps {
 function Mascot({ size = 220, className, animate = true }: MascotProps) {
   return (
     <img
-      src={size <= 64 ? "/logo/wolf-small.svg" : "/logo/wolf-head.svg"}
-      alt="GitFut mascot — a low-poly purple wolf"
+      src={size <= 96 ? "/logo/wolf-cute-small.svg" : "/logo/wolf-cute.svg"}
+      alt="GitFut mascot — a cute purple wolf biting a football"
       width={size}
       height={size}
       className={`${animate ? "animate-float" : ""} ${className ?? ""}`}
