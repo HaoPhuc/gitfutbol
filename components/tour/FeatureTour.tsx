@@ -351,7 +351,7 @@ export default function FeatureTour({ onDone }: { onDone: () => void }) {
             height: 0,
             opacity: 0,
             zIndex: 90,
-            boxShadow: "0 0 0 200vmax rgba(2,0,30,.84)",
+            boxShadow: "0 0 0 200vmax rgba(7,3,15,.84)",
             border: "1px solid rgba(212,175,55,.4)",
           }}
         />

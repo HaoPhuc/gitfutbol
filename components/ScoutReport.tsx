@@ -231,7 +231,7 @@ export function ReportHeader({ card, still = false }: { card: Card; still?: bool
           className="relative flex h-[clamp(78px,13vw,98px)] w-[clamp(78px,13vw,98px)] flex-col items-center justify-center rounded-2xl border"
           style={{
             borderColor: `${accent}40`,
-            background: `linear-gradient(160deg, ${accent}1a, transparent 70%), #0b0930`,
+            background: `linear-gradient(160deg, ${accent}1a, transparent 70%), #120a24`,
             boxShadow: `0 0 30px ${accent}1f, inset 0 1px 0 ${accent}26`,
           }}
         >

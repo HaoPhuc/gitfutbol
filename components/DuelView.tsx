@@ -230,7 +230,7 @@ export default function DuelView({
         {/* Trophy cabinet — each corner flexes the awards it brought in */}
         {settled && cabinet.length > 0 && (
           <section
-            className="rounded-2xl border border-white/[0.06] bg-[#0b0930]/35 backdrop-blur-sm p-[12px_8px] flex flex-col gap-1.5 mb-[12px] animate-rise-soft shadow-[0_8px_20px_rgba(0,0,0,0.3)]"
+            className="rounded-2xl border border-white/[0.06] bg-[#120a24]/35 backdrop-blur-sm p-[12px_8px] flex flex-col gap-1.5 mb-[12px] animate-rise-soft shadow-[0_8px_20px_rgba(0,0,0,0.3)]"
             style={{ width: CARD_WIDTH }}
           >
             <div className="flex items-center gap-[6px] justify-start text-left px-1">
@@ -368,7 +368,6 @@ export default function DuelView({
         <div
           aria-hidden
           className="pointer-events-none fixed inset-0 -z-10"
-          style={{ background: "var(--color-bg)" }}
         >
           <div
             className="absolute inset-y-0 left-0 w-[62%] transition-opacity duration-700"

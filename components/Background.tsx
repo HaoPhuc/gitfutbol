@@ -3,7 +3,7 @@ const noiseSvg =
 const NOISE = `url("data:image/svg+xml;utf8,${encodeURIComponent(noiseSvg)}")`;
 
 // Faint GitHub-contribution-grid motif — a brand signature drawn into the
-// backdrop. A few cells gently pulse green (see .gf-grid-cell in globals.css).
+// backdrop. A few cells gently pulse purple (see .gf-grid-cell in globals.css).
 //
 // The grid is fully deterministic, so we precompute it ONCE as a static SVG string and inject it via
 // dangerouslySetInnerHTML. This serializes as a single node in the RSC flight instead of 210 separate
@@ -18,8 +18,8 @@ const CONTRIB_GRID_SVG = (() => {
       const seed = (r * 7 + c * 13) % 11;
       const lit = seed < 3;
       const attrs = lit
-        ? ` fill="#39d353" class="gf-grid-cell" style="--gf-dur:${2.4 + seed * 0.4}s"`
-        : ` fill="#1b2530"`;
+        ? ` fill="#a855f7" class="gf-grid-cell" style="--gf-dur:${2.4 + seed * 0.4}s"`
+        : ` fill="#1d1233"`;
       rects += `<rect x="${c * 16}" y="${r * 16}" width="12" height="12" rx="2.5"${attrs}/>`;
     }
   }
@@ -36,10 +36,135 @@ function ContribGrid() {
   );
 }
 
+// The tech layer: hexagon mesh, circuit traces, light streaks, chevrons and data
+// columns on a 1600x900 canvas that covers the viewport. Precomputed once as a
+// string for the same reason as the grid above.
+const HEX_R = 62;
+
+const hexPath = (cx: number, cy: number, r: number) => {
+  let d = "";
+  for (let i = 0; i < 6; i++) {
+    const a = (Math.PI / 3) * i + Math.PI / 6;
+    d += `${i ? "L" : "M"}${Math.round(cx + r * Math.cos(a))} ${Math.round(cy + r * Math.sin(a))}`;
+  }
+  return `${d}Z`;
+};
+
+// A rough disc of hexagons with a few gaps, so it reads as a mesh, not a tiling.
+const hexField = (cx: number, cy: number, r: number, radius: number) => {
+  const w = Math.sqrt(3) * r;
+  const h = 1.5 * r;
+  const reach = Math.ceil(radius / h) + 1;
+  let cells = "";
+  let filled = "";
+  for (let row = -reach; row <= reach; row++) {
+    for (let col = -reach; col <= reach; col++) {
+      const x = cx + (col + (row & 1 ? 0.5 : 0)) * w;
+      const y = cy + row * h;
+      if (Math.hypot(x - cx, y - cy) > radius) continue;
+      const seed = (((row * 7 + col * 13) % 11) + 11) % 11;
+      if (seed === 0) continue;
+      const d = hexPath(x, y, r - 1);
+      cells += d;
+      if (seed < 4) filled += d;
+    }
+  }
+  return { cells, filled };
+};
+
+const chevrons = (x: number, y: number, count: number, dir = 1, s = 11, w = 8) => {
+  let d = "";
+  for (let i = 0; i < count; i++) {
+    const px = x + dir * i * 20;
+    d += `M${px} ${y}h${dir * w}l${dir * s} ${s}l${-dir * s} ${s}h${-dir * w}l${dir * s} ${-s}z`;
+  }
+  return d;
+};
+
+const ticks = (x: number, y: number, count: number, w = 26, h = 11, gap = 8) => {
+  let d = "";
+  for (let i = 0; i < count; i++) {
+    d += `M${x + i * (w + gap)} ${y}h${w}l-${h} ${h}h-${w}z`;
+  }
+  return d;
+};
+
+const TRACES = [
+  "M0 48H96L132 84H284L316 52H452",
+  "M0 84H72L120 132H236",
+  "M0 120H48L104 176H180",
+  "M188 0V30L214 56H340",
+  "M1600 836H1480L1444 800H1280L1248 832H1110",
+  "M1600 800H1520L1476 756H1360",
+  "M1412 900V868L1386 842H1262",
+];
+const TRACE_ENDS = [
+  [452, 52],
+  [236, 132],
+  [180, 176],
+  [340, 56],
+  [1110, 832],
+  [1360, 756],
+  [1262, 842],
+];
+const STREAKS = [
+  [930, 150, 420],
+  [1010, 330, 360],
+  [1180, 90, 300],
+  [1120, 520, 340],
+  [40, 560, 300],
+  [90, 760, 240],
+];
+const NODES = [
+  [1078, 292, 92],
+  [1205, 437, 120],
+  [1388, 206, 74],
+  [1490, 610, 64],
+  [172, 604, 78],
+  [226, 742, 58],
+];
+const COLUMNS = [64, 118, 196, 262, 1296, 1446, 1534];
+
+const TECH_SVG = (() => {
+  const main = hexField(1190, 400, HEX_R, 380);
+  const side = hexField(170, 660, HEX_R * 0.62, 190);
+  const streaks = STREAKS.map(
+    ([x, y, len]) =>
+      `<path d="M${x} ${y}l${len} ${Math.round(len * 0.36)}" stroke="url(#gf-t-streak)" stroke-width="2"/>`,
+  ).join("");
+  const nodes = NODES.map(
+    ([x, y, r], i) =>
+      `<g class="gf-tech-pulse" style="--gf-dur:${3.2 + i * 0.7}s">` +
+      `<circle cx="${x}" cy="${y}" r="${r}" fill="url(#gf-t-glow)"/>` +
+      `<rect x="${x - r * 1.7}" y="${y - 1}" width="${r * 3.4}" height="2" fill="url(#gf-t-flare)"/>` +
+      `<circle cx="${x}" cy="${y}" r="2.5" fill="#f3e3ff"/></g>`,
+  ).join("");
+  const columns = COLUMNS.map((x, i) => `<path d="M${x} ${180 + (i % 3) * 90}V${900 - (i % 2) * 150}"/>`).join("");
+  return (
+    `<svg width="100%" height="100%" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" fill="none" aria-hidden="true">` +
+    `<defs>` +
+    `<radialGradient id="gf-t-glow"><stop offset="0" stop-color="#d9a6ff" stop-opacity=".75"/><stop offset=".3" stop-color="#a855f7" stop-opacity=".28"/><stop offset="1" stop-color="#7e22ce" stop-opacity="0"/></radialGradient>` +
+    `<linearGradient id="gf-t-streak"><stop offset="0" stop-color="#c77dff" stop-opacity="0"/><stop offset=".55" stop-color="#c77dff" stop-opacity=".8"/><stop offset="1" stop-color="#c77dff" stop-opacity="0"/></linearGradient>` +
+    `<linearGradient id="gf-t-flare"><stop offset="0" stop-color="#e3c2ff" stop-opacity="0"/><stop offset=".5" stop-color="#e3c2ff"/><stop offset="1" stop-color="#e3c2ff" stop-opacity="0"/></linearGradient>` +
+    `<linearGradient id="gf-t-hex" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7e22ce" stop-opacity=".16"/><stop offset="1" stop-color="#3b0764" stop-opacity=".05"/></linearGradient>` +
+    `</defs>` +
+    `<g stroke="#a855f7" stroke-opacity=".2" stroke-dasharray="2 9">${columns}</g>` +
+    `<path d="${main.filled}${side.filled}" fill="url(#gf-t-hex)"/>` +
+    `<path d="${main.cells}${side.cells}" stroke="#a855f7" stroke-opacity=".2"/>` +
+    `<g stroke="#a855f7" stroke-opacity=".3">${TRACES.map((d) => `<path d="${d}"/>`).join("")}</g>` +
+    `<g fill="#c77dff" fill-opacity=".6">${TRACE_ENDS.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="3"/>`).join("")}</g>` +
+    streaks +
+    nodes +
+    `<path d="${chevrons(30, 420, 5)}${chevrons(1490, 118, 3)}${chevrons(1560, 700, 5, -1)}" fill="#c77dff" fill-opacity=".55"/>` +
+    `<path d="${ticks(66, 256, 3)}${ticks(56, 274, 3)}${ticks(1424, 520, 4)}" fill="#a855f7" fill-opacity=".4"/>` +
+    `</svg>`
+  );
+})();
+
 export default function Background() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden bg-bg">
-      {/* green ambient — the "action" color, top spotlight */}
+      {/* violet ambient, top spotlight */}
       <div
         className="animate-flood absolute"
         style={{
@@ -48,35 +173,22 @@ export default function Background() {
           width: "120%",
           height: "92%",
           background:
-            "radial-gradient(50% 62% at 50% 0%, rgba(57,211,83,.16), rgba(13,17,23,.2) 46%, rgba(13,17,23,0) 72%)",
+            "radial-gradient(50% 62% at 50% 0%, rgba(126,34,206,.2), rgba(7,3,15,.2) 46%, rgba(7,3,15,0) 72%)",
         }}
       />
-      {/* left cool wash */}
-      <div
-        className="absolute"
-        style={{
-          top: "-10%",
-          left: "4%",
-          width: "38%",
-          height: "78%",
-          background: "radial-gradient(closest-side, rgba(38,166,65,.12), transparent 72%)",
-          filter: "blur(18px)",
-          transform: "rotate(16deg)",
-        }}
-      />
-      {/* right whisper of WC26 gold — prestige, kept subtle */}
-      <div
-        className="absolute"
-        style={{
-          top: "-10%",
-          right: "4%",
-          width: "34%",
-          height: "78%",
-          background: "radial-gradient(closest-side, rgba(212,175,55,.08), transparent 72%)",
-          filter: "blur(20px)",
-          transform: "rotate(-16deg)",
-        }}
-      />
+      {/* tech layer, held to the viewport so tall pages don't stretch it. The
+          scrim keeps the middle of the page dark behind the content. */}
+      <div className="fixed inset-0">
+        <div
+          aria-hidden
+          style={{ width: "100%", height: "100%" }}
+          dangerouslySetInnerHTML={{ __html: TECH_SVG }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{ background: "radial-gradient(44% 62% at 50% 46%, rgba(7,3,15,.8), rgba(7,3,15,0) 100%)" }}
+        />
+      </div>
       {/* deep floor vignette */}
       <div
         className="absolute"
@@ -86,7 +198,7 @@ export default function Background() {
           width: "150%",
           height: "55%",
           transform: "translateX(-50%)",
-          background: "radial-gradient(60% 100% at 50% 100%, rgba(1,4,9,.85), transparent 72%)",
+          background: "radial-gradient(60% 100% at 50% 100%, rgba(3,1,7,.85), transparent 72%)",
         }}
       />
       {/* contribution-grid motif, faint along the bottom. Hidden below 980px:

@@ -40,7 +40,7 @@ async function fallback(username: string) {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: "#02001e",
+          background: "#07030f",
           backgroundImage: "radial-gradient(60% 40% at 50% 32%, rgba(57,211,83,0.16), transparent 72%)",
           color: "#e6edf3",
           fontFamily: "DINPro",

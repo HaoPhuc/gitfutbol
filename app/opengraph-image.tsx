@@ -30,7 +30,7 @@ export default async function Image() {
           height: "100%",
           display: "flex",
           position: "relative",
-          background: "#02001e",
+          background: "#07030f",
           backgroundImage:
             "radial-gradient(900px 520px at 22% -12%, rgba(57,211,83,0.20), transparent 60%), radial-gradient(720px 520px at 105% 120%, rgba(212,175,55,0.14), transparent 60%)",
           color: "#e6edf3",

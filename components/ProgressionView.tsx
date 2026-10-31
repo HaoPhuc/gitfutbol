@@ -111,7 +111,7 @@ function SeasonChart({ seasons }: { seasons: SeasonRating[] }) {
               cy={y(s.overall)}
               r={s.current ? 6 : 4}
               fill={MARK}
-              stroke="#02001e"
+              stroke="#07030f"
               strokeWidth="2"
             />
             {labelled.has(i) && (

@@ -7,7 +7,7 @@ import * as Sentry from "@sentry/nextjs";
 // so this replaces the entire document (it must render its own <html>/<body>).
 // It can't rely on the layout's fonts, globals.css tokens or <Background>, so it's
 // intentionally self-contained with inline styles in the brand palette
-// (bg #02001e, GitHub green #39d353).
+// (bg #07030f, GitHub green #39d353).
 export default function GlobalError({
   error,
   reset,
@@ -29,7 +29,7 @@ export default function GlobalError({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#02001e",
+          background: "#07030f",
           color: "#e6edf3",
           fontFamily: "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
           textAlign: "center",

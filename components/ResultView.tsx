@@ -100,16 +100,15 @@ export default function ResultView({
   return (
     <>
     <main className="relative z-[2] mx-auto flex min-h-[100dvh] w-full max-w-[1280px] flex-col px-[clamp(16px,4vw,22px)]">
-      {/* Tier-reactive backdrop: dims the global green wash and lets the card's
-          own tier color own the result screen (green is the action, the card is
-          the prize — they shouldn't fight here). Fades in with the reveal. The
-          bottom fade-out keeps it from burying the contribution-grid motif on
-          the floor: full tier wash up top, the grid stays lit below. */}
+      {/* Tier-reactive backdrop: a wash of the card's own tier color over the
+          global backdrop, so the card owns the result screen. Fades in with the
+          reveal. The bottom fade-out keeps it from burying the contribution-grid
+          motif on the floor: full tier wash up top, the grid stays lit below. */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 -z-10"
         style={{
-          background: `radial-gradient(120% 80% at 50% -10%, ${theme.glow}, transparent 55%), #02001e`,
+          background: `radial-gradient(120% 80% at 50% -10%, ${theme.glow}, transparent 55%)`,
           opacity: ignited ? 0.9 : 0.4,
           transition: "opacity 1s ease",
           WebkitMaskImage: "linear-gradient(to bottom, #000 68%, rgba(0,0,0,.25) 100%)",
