@@ -342,6 +342,7 @@ describe("fetchProfile GraphQL error triage + resource-limit fallback", () => {
       recentRestricted: 100,
       recentActiveDays: 2,
     });
+    expect(payload.recentWeeks).toHaveLength(52);
     // Per-repo commit counts merge BEFORE the ≥3 threshold: 2 + 2 commits to
     // acme/hot only qualifies as a language because the windows were combined.
     expect(payload.languageRepos).toContainEqual({ language: "Go" });

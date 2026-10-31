@@ -5,13 +5,14 @@ import type { Card, StatKey } from "@/lib/scoring/types";
 import { languageLogoUrl } from "@/lib/github/languages";
 import { cardDisplayName } from "@/lib/text";
 import { SITE_HOST } from "@/lib/site";
-import { resolveCardTheme } from "./finishTheme";
+import { AVATAR_CQW, evenWeeks, yearRingUri } from "@/lib/yearRing";
+import { LOGO_PLATE, resolveCardTheme } from "./finishTheme";
 
 // Faithful port of the Python FUT generator's 540×820 layout. Positions are
 // percentages of the card (x/540, y/820); font sizes are cqw (px/540×100) so the
-// card scales with its container. The tier background PNG carries the artwork;
-// everything else (rating, name, stats, flag, club, separator lines) is overlaid
-// here exactly where PIL drew it.
+// card scales with its container. The tier background carries the artwork; the
+// player's Year Ring and everything else (rating, name, stats, flag, club,
+// separator lines) are overlaid here exactly where PIL drew it.
 
 const AVATAR_FALLBACK =
   "data:image/svg+xml;utf8," +
@@ -68,6 +69,11 @@ function PlayerCard({ card }: { card: Card }) {
   const t = resolveCardTheme(card);
   const ink = t.ink;
   const displayName = cardDisplayName(card.name).toUpperCase();
+  const ring = t.ring ? yearRingUri(card.weeks ?? evenWeeks(card.finish), t.ring) : null;
+  // The sun cards' lower shield comes to a point, so the signature sits above it.
+  const signature = ring
+    ? { left: 20, right: "20%", top: 87.2, size: "3cqw", maxWidth: "29%" }
+    : { left: 8, right: "8%", top: 94.8, size: "4.1cqw", maxWidth: "40%" };
 
   const onAvatarError: React.ReactEventHandler<HTMLImageElement> = (e) => {
     e.currentTarget.onerror = null;
@@ -107,69 +113,102 @@ function PlayerCard({ card }: { card: Card }) {
           objectFit: "fill",
         }}
       />
-      <div
-        data-gitfut-avatar
-        style={{
-          position: "absolute",
-          inset: 0,
-          WebkitMaskImage: `url("${t.bg}")`,
-          maskImage: `url("${t.bg}")`,
-          WebkitMaskSize: "100% 100%",
-          maskSize: "100% 100%",
-        }}
-      >
+      {ring && (
+        <img
+          src={ring}
+          alt=""
+          aria-hidden
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
+        />
+      )}
+      {ring ? (
+        // Sun cards hold the photo in a plain circle. No mask here, so unlike the
+        // feathered avatar below it needs no data-gitfut-avatar bake on WebKit.
         <div
           style={{
             position: "absolute",
-            left: "27cqw",
-            top: "13cqw",
-            width: "68cqw",
-            height: "70cqw",
-            WebkitMaskImage: AVATAR_MASK_FEATHER,
-            maskImage: AVATAR_MASK_FEATHER,
+            left: `${AVATAR_CQW.left}cqw`,
+            top: `${AVATAR_CQW.top}cqw`,
+            width: `${AVATAR_CQW.size}cqw`,
+            height: `${AVATAR_CQW.size}cqw`,
+            borderRadius: "50%",
+            overflow: "hidden",
+          }}
+        >
+          <img
+            src={card.avatarUrl}
+            onError={onAvatarError}
+            alt={card.login}
+            crossOrigin="anonymous"
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
+          <div style={{ position: "absolute", inset: 0, background: t.avatarTint }} />
+        </div>
+      ) : (
+        <div
+          data-gitfut-avatar
+          style={{
+            position: "absolute",
+            inset: 0,
+            WebkitMaskImage: `url("${t.bg}")`,
+            maskImage: `url("${t.bg}")`,
+            WebkitMaskSize: "100% 100%",
+            maskSize: "100% 100%",
           }}
         >
           <div
             style={{
-              width: "100%",
-              height: "100%",
-              WebkitMaskImage: AVATAR_MASK_BOTTOM_FADE,
-              maskImage: AVATAR_MASK_BOTTOM_FADE,
+              position: "absolute",
+              left: "27cqw",
+              top: "13cqw",
+              width: "68cqw",
+              height: "70cqw",
+              WebkitMaskImage: AVATAR_MASK_FEATHER,
+              maskImage: AVATAR_MASK_FEATHER,
             }}
           >
             <div
               style={{
-                position: "relative",
                 width: "100%",
                 height: "100%",
-                WebkitMaskImage: AVATAR_MASK_TOP_FADE,
-                maskImage: AVATAR_MASK_TOP_FADE,
-                filter: `drop-shadow(0 3cqw 6cqw rgba(0,0,0,.5)) drop-shadow(0 0 5cqw ${t.avatarHalo})`,
+                WebkitMaskImage: AVATAR_MASK_BOTTOM_FADE,
+                maskImage: AVATAR_MASK_BOTTOM_FADE,
               }}
             >
-              <img
-                src={card.avatarUrl}
-                onError={onAvatarError}
-                alt={card.login}
-                crossOrigin="anonymous"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  objectPosition: "center 20%",
-                }}
-              />
               <div
                 style={{
-                  position: "absolute",
-                  inset: 0,
-                  background: t.avatarTint,
+                  position: "relative",
+                  width: "100%",
+                  height: "100%",
+                  WebkitMaskImage: AVATAR_MASK_TOP_FADE,
+                  maskImage: AVATAR_MASK_TOP_FADE,
+                  filter: `drop-shadow(0 3cqw 6cqw rgba(0,0,0,.5)) drop-shadow(0 0 5cqw ${t.avatarHalo})`,
                 }}
-              />
+              >
+                <img
+                  src={card.avatarUrl}
+                  onError={onAvatarError}
+                  alt={card.login}
+                  crossOrigin="anonymous"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    objectPosition: "center 20%",
+                  }}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    background: t.avatarTint,
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* separator lines */}
       {H_LINES.map(([l, top, w], i) => (
@@ -239,10 +278,10 @@ function PlayerCard({ card }: { card: Card }) {
       )}
 
       {/* top language logo — a transparent PNG in the left identity column (under
-          the flag), taking the slot the club badge used to occupy. The catalog's
-          PNGs are full-colour on a transparent background, so they read on the
-          card art with no plate. crossOrigin keeps html-to-image export untainted;
-          onError hides it on a CDN miss. Cards without a logo leave the slot empty. */}
+          the flag), taking the slot the club badge used to occupy, on a pale plate
+          on sun cards (see LOGO_PLATE). crossOrigin keeps html-to-image export
+          untainted; onError hides it on a CDN miss. Cards without a logo leave the
+          slot empty. */}
       {card.languageLogo && (
         <img
           src={languageLogoUrl(card.languageLogo.slug)}
@@ -257,6 +296,14 @@ function PlayerCard({ card }: { card: Card }) {
             width: "11.875%",
             height: "7.5%",
             objectFit: "contain",
+            ...(ring
+              ? {
+                  boxSizing: "border-box",
+                  padding: `${LOGO_PLATE.padding}cqw`,
+                  background: LOGO_PLATE.background,
+                  borderRadius: `${LOGO_PLATE.radius}cqw`,
+                }
+              : null),
           }}
         />
       )}
@@ -313,9 +360,9 @@ function PlayerCard({ card }: { card: Card }) {
       <div className="gitfut-signature">
         <div
           style={{
-            ...at(8, 94.8),
+            ...at(signature.left, signature.top),
             fontFamily: FONT_BOLD,
-            fontSize: "4.1cqw",
+            fontSize: signature.size,
             fontWeight: 700,
             letterSpacing: ".1em",
             lineHeight: 1,
@@ -329,13 +376,13 @@ function PlayerCard({ card }: { card: Card }) {
         <div
           style={{
             position: "absolute",
-            right: "8%",
-            top: "94.8%",
-            maxWidth: "40%",
+            right: signature.right,
+            top: `${signature.top}%`,
+            maxWidth: signature.maxWidth,
             overflow: "hidden",
             textOverflow: "ellipsis",
             fontFamily: FONT_BOLD,
-            fontSize: "4.1cqw",
+            fontSize: signature.size,
             fontWeight: 700,
             letterSpacing: ".1em",
             lineHeight: 1,

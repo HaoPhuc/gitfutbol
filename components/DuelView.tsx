@@ -158,8 +158,8 @@ export default function DuelView({
   const { challenger, opponent, rows, winner, onPenalties, training } = duel;
 
   const [activeAward, setActiveAward] = useState<AwardGroup | null>(null);
-  // Kit clash (see finishTheme): ONLY a toty/totw vs silver pairing recolors —
-  // the toty side wears its saturated tier blue so the sides stay readable.
+  // Kit clash (see finishTheme): ONLY a toty vs silver pairing recolors —
+  // the toty side wears its saturated tier purple so the sides stay readable.
   const { home: aTheme, away: bTheme } = duelThemes(challenger, opponent);
   const { phase, skip } = useDuelReveal();
   const settled = phase.kind === "settled";

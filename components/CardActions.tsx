@@ -74,7 +74,7 @@ export default function CardActions({
   const openedByKey = useRef(false);
 
   // Download CTA picks up the card's own tier color so the action matches the
-  // card the user is saving (bronze → bronze, silver → silver, TOTY → blue,
+  // card the user is saving (bronze → bronze, silver → silver, TOTY → purple,
   // founder → their accent).
   const tier = resolveResultTheme(card).ink;
 
