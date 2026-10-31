@@ -12,6 +12,8 @@ import BuyMeACoffee from "@/components/BuyMeACoffee";
 import SupportProductHunt from "@/components/SupportProductHunt";
 import GithubStar from "@/components/GithubStar";
 import { SAMPLE_CARDS } from "@/lib/github/samples";
+import type { PlayerEntry } from "@/lib/registry";
+import { withLiveRating } from "@/lib/showcase";
 import { TOUR_STORAGE_KEY } from "@/components/tour/steps";
 
 const HowItWorksModal = dynamic(() => import("@/components/HowItWorksModal"), {
@@ -29,9 +31,11 @@ const FeatureTour = dynamic(() => import("@/components/tour/FeatureTour"), { ssr
 export default function AppShell({
   stars,
   scoutCount,
+  fan,
 }: {
   stars: number | null;
   scoutCount: number | null;
+  fan: (PlayerEntry | null)[]; // each sample card's live entry, in SAMPLE_CARDS order
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -97,7 +101,7 @@ export default function AppShell({
             onScout={handleScout}
             onOpenModal={() => setModalOpen(true)}
           />
-          <CardFan cards={SAMPLE_CARDS} onPick={handleScout} />
+          <CardFan cards={SAMPLE_CARDS.map((c, i) => withLiveRating(c, fan[i]))} onPick={handleScout} />
         </div>
         <footer className="relative z-[2] mt-auto flex flex-none items-center justify-center p-[clamp(12px,2.6vh,24px)]">
           <FooterCredit />
