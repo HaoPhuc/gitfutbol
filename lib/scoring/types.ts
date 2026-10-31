@@ -182,6 +182,8 @@ export interface Card {
   // potential/value outlook. Optional for the same serialization reason.
   seasons?: SeasonRating[];
   outlook?: Outlook;
+  // Other accounts this card counts, when the player merged them (lib/merge).
+  mergedFrom?: string[];
   // ISO time the card was built from GitHub (lib/scout), behind the "Scouted …
   // ago · Re-scout" line. Unset on the baked sample cards.
   builtAt?: string;
