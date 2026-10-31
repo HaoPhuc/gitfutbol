@@ -107,7 +107,7 @@ export default function CardActions({
       if (node && "canShare" in navigator) {
         const blob = await renderCardImage(node, (n) => toBlob(n, RENDER_OPTS));
         if (blob) {
-          const file = new File([blob], `${card.login}-gitfut.png`, { type: "image/png" });
+          const file = new File([blob], `${card.login}-gitfutbol.png`, { type: "image/png" });
           if (navigator.canShare?.({ files: [file] })) {
             return { ...payload, files: [file] };
           }
@@ -174,7 +174,7 @@ export default function CardActions({
       await run();
       finish(id);
     } catch (e) {
-      console.error(`[gitfut] card ${id} failed:`, e);
+      console.error(`[gitfutbol] card ${id} failed:`, e);
       setError(`${ACTION_COPY[id].name} failed: ${e instanceof Error ? e.message : String(e)}`);
     } finally {
       setBusy(null);
@@ -189,7 +189,7 @@ export default function CardActions({
       // carries the site signature (hidden on the live card).
       const url = await renderCardImage(node, (n) => toPng(n, RENDER_OPTS));
       const a = document.createElement("a");
-      a.download = `${card.login}-gitfut.png`;
+      a.download = `${card.login}-gitfutbol.png`;
       a.href = url;
       a.click();
     });
@@ -229,7 +229,7 @@ export default function CardActions({
         if (!b) throw new Error("render returned no image");
         return b;
       });
-      const file = new File([blob], `${card.login}-gitfut-story.png`, { type: "image/png" });
+      const file = new File([blob], `${card.login}-gitfutbol-story.png`, { type: "image/png" });
 
       // navigator.share with a file is often advertised on desktop (canShare
       // = true) but no-ops — so it must never be the only outcome. Only mobile

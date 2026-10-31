@@ -3,7 +3,7 @@ import Redis from "ioredis";
 
 // One shared connection, stashed on globalThis so dev HMR doesn't leak sockets.
 declare global {
-  var __gitfutRedis: Redis | null | undefined;
+  var __gitfutbolRedis: Redis | null | undefined;
 }
 
 function create(): Redis | null {
@@ -21,4 +21,4 @@ function create(): Redis | null {
 }
 
 export const redis: Redis | null =
-  globalThis.__gitfutRedis !== undefined ? globalThis.__gitfutRedis : (globalThis.__gitfutRedis = create());
+  globalThis.__gitfutbolRedis !== undefined ? globalThis.__gitfutbolRedis : (globalThis.__gitfutbolRedis = create());

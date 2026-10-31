@@ -14,9 +14,9 @@ import { WC26_TEAMS, type Confederation } from "@/lib/wc26";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "National squads · GitFut",
+  title: "National squads · GitFutbol",
   description:
-    "Pick a country and see the strongest 25-man squad its developers can field, picked from every GitFut card: starting XI, team rating and the full World Cup squad.",
+    "Pick a country and see the strongest 25-man squad its developers can field, picked from every GitFutbol card: starting XI, team rating and the full World Cup squad.",
   alternates: { canonical: "/squads" },
 };
 
@@ -40,7 +40,7 @@ export default async function Page() {
       <Background />
       <main className="relative z-[2] mx-auto flex min-h-screen w-full max-w-[980px] flex-col gap-[18px] px-5 pb-12 pt-6">
         <Link href="/" className="self-start text-[13px] font-semibold text-ink-soft transition hover:text-brand">
-          ← back to GitFut
+          ← back to GitFutbol
         </Link>
 
         <header className="mt-2">

@@ -204,7 +204,7 @@ const StoryFrame = forwardRef<HTMLDivElement, { card: Card }>(function StoryFram
           arrow), with the bare domain under it. Pinned inside the safe band so
           IG's bottom bar never eats the conversion. No button container — the
           story isn't tappable, so it reads as a confident headline, not a fake
-          tap target. Bookends the green "GITFUT" up top. */}
+          tap target. Bookends the green "GITFUTBOL" up top. */}
       <div
         style={{
           position: "absolute",

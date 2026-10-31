@@ -4,7 +4,7 @@
 
 Please **do not** open a public issue for security problems.
 
-Report it privately through GitHub's **[private vulnerability reporting](https://github.com/Younesfdj/gitfut/security/advisories/new)** (repo → **Security** → **Report a vulnerability**). If that isn't available, email **ferradjiyounes69@gmail.com**.
+Report it privately through GitHub's **[private vulnerability reporting](https://github.com/HaoPhuc/gitfutbol/security/advisories/new)** (repo → **Security** → **Report a vulnerability**). If that isn't available, email **ferradjiyounes69@gmail.com**.
 
 Please include:
 
@@ -18,18 +18,18 @@ You'll get an acknowledgement within **72 hours**, and I'll work to ship a fix a
 
 **In scope**
 
-- the **gitfut.com** web app and its API routes,
+- the **gitfutbol.com** web app and its API routes,
 - the source in this repository.
 
 **Out of scope**
 
 - issues that require a compromised GitHub account or a leaked token,
 - rate-limiting / denial-of-service on the public GitHub-backed endpoints (they're best-effort by design),
-- vulnerabilities in third-party dependencies with no working exploit against GitFut (please report those upstream),
+- vulnerabilities in third-party dependencies with no working exploit against GitFutbol (please report those upstream),
 - automated scanner output with no demonstrated impact.
 
 ## Supported versions
 
-GitFut is a continuously-deployed web app — only the currently deployed version (tracking `master`) is supported. There are no tagged releases to backport fixes to.
+GitFutbol is a continuously-deployed web app — only the currently deployed version (tracking `master`) is supported. There are no tagged releases to backport fixes to.
 
 Thanks for helping keep scouts safe. 🛡️

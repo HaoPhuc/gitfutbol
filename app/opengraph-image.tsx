@@ -8,7 +8,7 @@ import { SITE_HOST } from "@/lib/site";
 // Branded preview for the home page / bare-domain links. Next wires this as
 // the default og:image + twitter:image automatically (metadataBase is absolute).
 export const runtime = "nodejs";
-export const alt = "GitFut — your GitHub, rated out of 99";
+export const alt = "GitFutbol — your GitHub, rated out of 99";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

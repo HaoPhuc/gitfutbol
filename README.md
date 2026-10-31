@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="public/logo/wolf-cute.svg" width="120" alt="GitFut wolf logo">
+<img src="public/logo/wolf-cute.svg" width="120" alt="GitFutbol wolf logo">
 
-# GitFut
+# GitFutbol
 
 **your GitHub, rated out of 99** ⚽
 
@@ -10,9 +10,9 @@
 
 <br/><br/>
 
-<a href="https://gitfutbol.com/torvalds"><img src="https://gitfutbol.com/torvalds.png" width="240" alt="GitFut card"></a>
-<a href="https://gitfutbol.com/ThePrimeagen"><img src="https://gitfutbol.com/ThePrimeagen.png" width="240" alt="GitFut card"></a>
-<a href="https://gitfutbol.com/t3dotgg"><img src="https://gitfutbol.com/t3dotgg.png" width="240" alt="GitFut card"></a>
+<a href="https://gitfutbol.com/torvalds"><img src="https://gitfutbol.com/torvalds.png" width="240" alt="GitFutbol card"></a>
+<a href="https://gitfutbol.com/ThePrimeagen"><img src="https://gitfutbol.com/ThePrimeagen.png" width="240" alt="GitFutbol card"></a>
+<a href="https://gitfutbol.com/t3dotgg"><img src="https://gitfutbol.com/t3dotgg.png" width="240" alt="GitFutbol card"></a>
 
 <br/><br/>
 
@@ -25,7 +25,7 @@
 Your card lives at a URL. Drop it in your profile README, your portfolio, anywhere — and it **re-scouts itself** as your stats change.
 
 ```md
-[![My GitFut card](https://gitfutbol.com/YOUR_USERNAME.png)](https://gitfutbol.com/YOUR_USERNAME)
+[![My GitFutbol card](https://gitfutbol.com/YOUR_USERNAME.png)](https://gitfutbol.com/YOUR_USERNAME)
 ```
 
 | | |

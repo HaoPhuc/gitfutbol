@@ -274,7 +274,7 @@ export default function ClubView({ club }: { club: Club }) {
 
       <p className="text-[12px] leading-[1.5] text-ink-mute [overflow-wrap:anywhere]">
         The squad is the org&apos;s top contributors on its most-starred repos{sampled ? ` (${sampled})` : ""}, each
-        rated by their own GitFut card. Bots are left out. Code has no goalkeepers, so the spare player with the best
+        rated by their own GitFutbol card. Bots are left out. Code has no goalkeepers, so the spare player with the best
         DEF goes in goal. The formation is the one that moves the fewest players off their natural line.
       </p>
     </main>

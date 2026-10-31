@@ -23,11 +23,11 @@ type Params = { params: Promise<{ country: string }> };
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const code = normalizeCountry((await params).country);
-  if (!code) return { title: "Squad not found · GitFut", robots: { index: false } };
+  if (!code) return { title: "Squad not found · GitFutbol", robots: { index: false } };
   const name = teamName(code) ?? code;
   return {
-    title: `${name} squad · GitFut`,
-    description: `The strongest 25 developers from ${name} on GitFut: the starting XI, team rating and the full squad, picked from every scouted card.`,
+    title: `${name} squad · GitFutbol`,
+    description: `The strongest 25 developers from ${name} on GitFutbol: the starting XI, team rating and the full squad, picked from every scouted card.`,
     alternates: { canonical: `/squads/${code}` },
   };
 }

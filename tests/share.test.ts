@@ -57,7 +57,7 @@ describe("share service", () => {
     const u = intentUrl("x", card());
     expect(u).toContain("https://twitter.com/intent/tweet?");
     expect(u).not.toContain("/intent/post");
-    expect(u).toContain("hashtags=GitFut");
+    expect(u).toContain("hashtags=GitFutbol");
     expect(u).toContain(encodeURIComponent("https://gitfutbol.com/torvalds?country=us"));
   });
 
@@ -90,7 +90,7 @@ describe("share service", () => {
 
   it("native payload carries title, brag-led text, and url", () => {
     const p = nativeSharePayload(card());
-    expect(p.title).toBe("GitFut");
+    expect(p.title).toBe("GitFutbol");
     expect(p.url).toBe("https://gitfutbol.com/torvalds?country=us");
     expect(p.text).toBe(shareMessage(card()));
     expect(p.text).toContain("get scouted");
@@ -128,13 +128,13 @@ describe("duel share service", () => {
     const u = duelIntentUrl("younesfdj", "torvalds");
     expect(u).toContain("https://twitter.com/intent/tweet?");
     expect(u).not.toContain("/intent/post");
-    expect(u).toContain("hashtags=GitFut");
+    expect(u).toContain("hashtags=GitFutbol");
     expect(u).toContain(encodeURIComponent("https://gitfutbol.com/younesfdj/vs/torvalds"));
   });
 
   it("native payload carries the title, the message, and the duel url", () => {
     const p = duelSharePayload("younesfdj", "torvalds");
-    expect(p.title).toBe("GitFut Duel");
+    expect(p.title).toBe("GitFutbol Duel");
     expect(p.url).toBe("https://gitfutbol.com/younesfdj/vs/torvalds");
     expect(p.text).toBe(duelShareMessage("younesfdj", "torvalds"));
   });

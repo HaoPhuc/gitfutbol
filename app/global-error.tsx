@@ -16,7 +16,7 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("[gitfut] global error:", error);
+    console.error("[gitfutbol] global error:", error);
     Sentry.captureException(error);
   }, [error]);
 
@@ -37,7 +37,7 @@ export default function GlobalError({
         }}
       >
         <div style={{ maxWidth: 460 }}>
-          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.3em", color: "#39d353" }}>GITFUT</div>
+          <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.3em", color: "#39d353" }}>GITFUTBOL</div>
           <h1 style={{ margin: "14px 0 0", fontSize: 34, fontWeight: 800, lineHeight: 1.05 }}>Match abandoned</h1>
           <p style={{ margin: "14px 0 0", fontSize: 15.5, lineHeight: 1.5, color: "#a8b3bd" }}>
             Something went badly wrong. Reload to get back to the pitch.

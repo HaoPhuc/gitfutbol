@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea or improvement for GitFut
+about: Suggest an idea or improvement for GitFutbol
 title: ""
 labels: enhancement
 assignees: ""

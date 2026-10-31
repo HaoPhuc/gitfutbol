@@ -36,7 +36,7 @@ const dinCond = localFont({ src: "./fonts/DINPro-Cond.otf", variable: "--font-di
 const dinBold = localFont({ src: "./fonts/DINPro-CondBold.otf", variable: "--font-din-bold", display: "swap" });
 const dinMedium = localFont({ src: "./fonts/DINPro-CondMedium.otf", variable: "--font-din-medium", display: "swap" });
 
-const TITLE = "GitFut — your GitHub, rated out of 99";
+const TITLE = "GitFutbol — your GitHub, rated out of 99";
 const DESCRIPTION =
   "Rate any GitHub profile out of 99 as a FIFA-Ultimate-Team-style player card, scored from real commits, stars and contributions. Get scouted and share your card.";
 
@@ -52,14 +52,14 @@ export const metadata: Metadata = {
     "FUT card",
     "GitHub rating",
     "World Cup",
-    "GitFut",
+    "GitFutbol",
   ],
   alternates: { canonical: "/" },
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,
     url: SITE_URL,
-    siteName: "GitFut",
+    siteName: "GitFutbol",
     type: "website",
   },
   twitter: {
