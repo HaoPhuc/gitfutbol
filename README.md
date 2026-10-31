@@ -58,11 +58,13 @@ Every card walks out in a finish:
 ![Bronze](https://img.shields.io/badge/BRONZE-%E2%89%A464-CD7F32?style=flat-square&labelColor=2A1A0C)
 ![Silver](https://img.shields.io/badge/SILVER-65--74-AAB2BD?style=flat-square&labelColor=262B33)
 ![Gold](https://img.shields.io/badge/GOLD-75--84-E6B422?style=flat-square&labelColor=3A2806)
-![In-Form](https://img.shields.io/badge/IN--FORM-spike-E03E52?style=flat-square&labelColor=4A0A14)
-![TOTY](https://img.shields.io/badge/TOTY-85--89-3B7AFF?style=flat-square&labelColor=10254F)
+![In-Form](https://img.shields.io/badge/IN--FORM-spike-FF5CC8?style=flat-square&labelColor=3F0E52)
+![TOTY](https://img.shields.io/badge/TOTY-85--89-9A3BFF?style=flat-square&labelColor=2B1259)
 ![Icon](https://img.shields.io/badge/ICON-90%2B-F3D688?style=flat-square&labelColor=2A1A45)
 
 </div>
+
+Around your photo, the **Year Ring** wraps your last 52 weeks around the sun: one ray a week, seven cells deep. Every extra cell takes twice the contributions, and 64+ in a week fills the ray, so no two cards burn the same.
 
 <br/>
 
