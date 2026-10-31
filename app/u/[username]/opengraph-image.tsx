@@ -12,7 +12,7 @@ import type { Card } from "@/lib/scoring/types";
 import { SITE_HOST } from "@/lib/site";
 
 export const runtime = "nodejs";
-export const alt = "GitFut player card";
+export const alt = "GitFutbol player card";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

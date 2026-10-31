@@ -28,9 +28,9 @@ export default withSentryConfig(nextConfig, {
   // For all available options, see:
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 
-  org: "gitfut",
+  org: "gitfutbol",
 
-  project: "gitfut",
+  project: "gitfutbol",
   sentryUrl: process.env.NEXT_PUBLIC_SENTRY_URL,
 
   // Always report the source-map upload: the Docker build has no CI flag, and a

@@ -17,13 +17,13 @@ export async function generateMetadata({ params }: { params: Promise<{ org: stri
   if ("club" in res) {
     const { club } = res;
     return {
-      title: `${club.name} club · GitFut`,
-      description: `${club.name} as a football club on GitFut: ${club.overall} ${club.finishLabel}, a ${club.squad.formation} of its top contributors.`,
+      title: `${club.name} club · GitFutbol`,
+      description: `${club.name} as a football club on GitFutbol: ${club.overall} ${club.finishLabel}, a ${club.squad.formation} of its top contributors.`,
       alternates: { canonical: `/club/${club.login}` },
     };
   }
   // Not a real org (or GitHub said no) — keep these soft-404s out of the index.
-  return { title: `@${org} club · GitFut`, robots: { index: false } };
+  return { title: `@${org} club · GitFutbol`, robots: { index: false } };
 }
 
 function ClubNotScouted({ org, error }: { org: string; error: GithubError }) {

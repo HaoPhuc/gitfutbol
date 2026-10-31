@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ============================================================
-   GitFut Design System — WC26 luxury spine × GitHub green action
+   GitFutbol Design System — WC26 luxury spine × GitHub green action
    The keystone module: every screen reads from these tokens.
    ============================================================ */
 @theme {
@@ -393,11 +393,11 @@
 
 /* Card signature (site domain + @handle) — hidden on the live card, painted only
    into exported images. CardActions / CardImageSync capture an off-screen clone
-   tagged `.gitfut-capturing`, which reveals it. See lib/capture.ts. */
-.gitfut-signature {
+   tagged `.gitfutbol-capturing`, which reveals it. See lib/capture.ts. */
+.gitfutbol-signature {
   display: none;
 }
-.gitfut-capturing .gitfut-signature {
+.gitfutbol-capturing .gitfutbol-signature {
   display: block;
 }
 

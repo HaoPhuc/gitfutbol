@@ -55,7 +55,7 @@ export const AWARD_META: Record<AwardKey, AwardMeta> = {
     shelfLabel: "WORLD CUP",
     metricLabel: "Campeones WC26",
     description:
-      "Spain won the 2026 World Cup, and every Spanish profile lifts the trophy with them. A gift from GitFut to the champions' bench.",
+      "Spain won the 2026 World Cup, and every Spanish profile lifts the trophy with them. A gift from GitFutbol to the champions' bench.",
   },
 };
 

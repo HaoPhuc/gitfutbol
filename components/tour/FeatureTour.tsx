@@ -390,7 +390,7 @@ export default function FeatureTour({ onDone }: { onDone: () => void }) {
             />
 
             <div className="font-mono text-[11px] font-semibold tracking-[.4em] text-brand">
-              ONE MONTH OF GITFUT
+              ONE MONTH OF GITFUTBOL
             </div>
 
             {/* every language stacked in a single grid cell: the block keeps one
