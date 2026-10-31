@@ -9,13 +9,13 @@
   --font-sans: var(--font-inter);
   --font-mono: var(--font-jetbrains);
 
-  /* WC26 spine — blue-black midnight / surfaces / gray / ink / gold */
-  --color-bg: #02001e;
-  --color-bg-deep: #010012;
-  --color-panel: #0b0930;
-  --color-surface: #0b0930;
-  --color-surface-2: #130f3d;
-  --color-line: #262358;
+  /* WC26 spine — black-purple night / surfaces / gray / ink / gold */
+  --color-bg: #07030f;
+  --color-bg-deep: #030107;
+  --color-panel: #120a24;
+  --color-surface: #120a24;
+  --color-surface-2: #1b1035;
+  --color-line: #2e1f52;
   --color-gray: #8b949e;
 
   --color-ink: #e6edf3;
@@ -371,6 +371,20 @@
   0%,
   100% {
     opacity: 0.18;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* the tech backdrop's light nodes, breathing slowly */
+.gf-tech-pulse {
+  animation: gf-tech-pulse var(--gf-dur, 4s) ease-in-out infinite;
+}
+@keyframes gf-tech-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
   }
   50% {
     opacity: 1;

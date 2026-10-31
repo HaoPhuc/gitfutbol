@@ -62,7 +62,7 @@ export default function VsBurst({ size = 10 }: { size: number }) {
         <path
           d={V_PATH}
           fill="none"
-          stroke="#02001e"
+          stroke="#07030f"
           strokeWidth={7}
           strokeLinejoin="round"
           opacity={0.85}
@@ -70,7 +70,7 @@ export default function VsBurst({ size = 10 }: { size: number }) {
         <path
           d={S_PATH}
           fill="none"
-          stroke="#02001e"
+          stroke="#07030f"
           strokeWidth={7}
           strokeLinejoin="round"
           opacity={0.85}
